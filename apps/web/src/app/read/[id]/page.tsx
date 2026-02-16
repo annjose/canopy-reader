@@ -159,6 +159,29 @@ export default function ReadPage() {
         onTocOpenChange={setTocOpen}
         onMutate={() => mutate()}
       />
+
+      <header className="mx-auto max-w-[680px] px-6 pt-8">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+          {doc.title}
+        </h1>
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+          {[
+            doc.author,
+            doc.domain,
+            doc.reading_time_minutes
+              ? `${doc.reading_time_minutes} min read`
+              : null,
+          ]
+            .filter(Boolean)
+            .map((part, i, arr) => (
+              <span key={i}>
+                {part}
+                {i < arr.length - 1 ? " • " : ""}
+              </span>
+            ))}
+        </div>
+      </header>
+
       <ReaderView id={id} />
     </>
   );
