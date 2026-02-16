@@ -14,6 +14,7 @@ type Props = {
 };
 
 export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Props) {
+  const dateStr = new Date(doc.created_at).toLocaleDateString();
   async function toggleFavorite() {
     try {
       await updateDocument(doc.id, {
@@ -78,7 +79,7 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
         <img
           src={doc.image_url}
           alt=""
-          className="h-16 w-24 flex-shrink-0 rounded object-cover"
+          className="h-14 w-20 sm:h-16 sm:w-24 flex-shrink-0 rounded object-cover"
         />
       )}
 
@@ -91,15 +92,18 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
             {doc.description}
           </p>
         )}
-        <div className="mt-1 flex items-center gap-2 text-xs text-gray-400">
-          {doc.domain && <span>{doc.domain}</span>}
+        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400">
+          {doc.domain && <span className="whitespace-nowrap">{doc.domain}</span>}
           {doc.reading_time_minutes && (
-            <span>{doc.reading_time_minutes} min read</span>
+            <span className="whitespace-nowrap">
+              {doc.reading_time_minutes} min read
+            </span>
           )}
+          <span className="sm:hidden whitespace-nowrap">{dateStr}</span>
         </div>
       </Link>
 
-      <div className="flex flex-shrink-0 items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+      <div className="hidden lg:flex flex-shrink-0 items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
         <button
           onClick={(e) => {
             e.stopPropagation();
@@ -132,8 +136,8 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
         </button>
       </div>
 
-      <span className="flex-shrink-0 text-xs text-gray-400 pt-0.5">
-        {new Date(doc.created_at).toLocaleDateString()}
+      <span className="hidden sm:block flex-shrink-0 text-xs text-gray-400 pt-0.5">
+        {dateStr}
       </span>
     </div>
   );
