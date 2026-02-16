@@ -45,21 +45,21 @@ This doc tracks implementation progress for Phase 2 against the plan:
 ### Milestone 6 — UI: Tag picker + tag filter
 - Status: Done
 - Notes: Library supports `?tag=<slug>` filtering (now intersects with status tabs) and Notebook tag picker dialog added (create/select + apply to document).
-- PR/Commit:
+- PR/Commit: 
 
 ### Milestone 7 — Highlights capture (save + list)
-- Status: In progress
+- Status: Done
 - Notes: Reader text-selection popover implemented to create highlights (default yellow) with optional note + color picker; syncs to Notebook; selection trigger made more reliable by listening on document mouseup.
-- PR/Commit:
+- PR/Commit: a386523
 
 ### Milestone 8 — In-text highlight rendering
-- Status: In progress
-- Notes: Rendering saved highlights inline in reader via span wrappers (best-effort quote matching).
-- PR/Commit:
+- Status: Done
+- Notes: Rendering saved highlights inline in reader via span wrappers (best-effort quote matching).  Overhauled highlight UX with compact toolbar and inline editing using Claude Code with Opus.
+- PR/Commit: ea59c7f
 
 ### Milestone 9 — Tags management page
-- Status: Not started
-- Notes:
+- Status: Done
+- Notes: Added `/tags` page with tag counts, create, rename, delete, and merge actions. Added `Tags` sidebar entry. Extended tags API with optional counts (`GET /api/tags?include_counts=true`) and merge endpoint (`POST /api/tags/merge`).
 - PR/Commit:
 
 ### Milestone 10 — Markdown export
