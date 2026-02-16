@@ -4,13 +4,13 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 
 ## Project Setup
 
-| Step | Description                                                             | Status      |
-|------|-------------------------------------------------------------------------|-------------|
-| 1.1  | Initialize Next.js app (pnpm + Turborepo monorepo, Tailwind CSS v4)     | Done        |
-| 1.2  | Cloudflare deployment pipeline (opennextjs-cloudflare, wrangler deploy) | Done        |
-| 1.3  | Cloudflare Access auth                                                  | **Next**    |
-| 1.4  | Database migrations (0001_create_documents.sql, migrate.sh)             | Done        |
-| 1.5  | R2 storage utilities                                                    | Done        |
+| Step | Description                                                             | Status   |
+|------|-------------------------------------------------------------------------|----------|
+| 1.1  | Initialize Next.js app (pnpm + Turborepo monorepo, Tailwind CSS v4)     | Done     |
+| 1.2  | Cloudflare deployment pipeline (opennextjs-cloudflare, wrangler deploy) | Done     |
+| 1.3  | Cloudflare Access auth (verify Access JWT on API routes)                | **Next** |
+| 1.4  | Database migrations (0001_create_documents.sql, migrate.sh)             | Done     |
+| 1.5  | R2 storage utilities                                                    | Done     |
 
 ## Features
 
@@ -18,9 +18,9 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 |------|---------------------------------------------------------------------------------------------------|-------------|
 | 2    | API layer — Document CRUD, article content extraction (Readability)                               | Done        |
 | 3    | UI components — Three-panel layout, sidebar, document list, reader view, right panel, save dialog | Done        |
-| 4    | Keyboard shortcuts — Shortcut engine, all bindings, help modal                                    | Not started |
-| 5    | Search — Command palette + search API                                                             | Not started |
-| 6    | Mobile responsive — Breakpoints, collapsible panels                                               | Not started |
+| 4    | Keyboard shortcuts — Shortcut engine, list+reader bindings, help modal                            | Done        |
+| 5    | Search — Command palette + search API                                                             | Done        |
+| 6    | Mobile responsive — Breakpoints, collapsible panels                                               | **Next**    |
 
 ## Notes
 
@@ -29,3 +29,9 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 - Cloudflare account: use ann.jose@gmail.com (not georgeck@gmail.com)
 - D1 database ID: `b0c9028e-0805-45c6-b076-3c8913e7300f`
 - Deployed URL: `https://canopy.annjose.workers.dev`
+
+### Additional work completed (not explicitly tracked in the Phase 1 table)
+
+- shadcn/ui foundation added (Tailwind tokens + primitives like Dialog/Command/Input/Button)
+- Toast notifications for common document actions (save, favorite, status change, trash)
+- Reader view now displays a document header (title + basic metadata)
