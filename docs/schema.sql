@@ -1,4 +1,9 @@
 -- Canopy — Database Schema (Cloudflare D1 / SQLite)
+--
+-- NOTE: This file is a FULL SCHEMA REFERENCE for all phases.
+-- It is NOT applied directly. Use the numbered migration files in
+-- migrations/ instead (see docs/repo-structure.md for the workflow).
+--
 -- Full schema for all phases. Apply incrementally as phases are built.
 
 ----------------------------------------------------------------------

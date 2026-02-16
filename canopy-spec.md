@@ -62,9 +62,13 @@ Additionally:
 - **Cron**: Cloudflare Workers Cron Triggers (RSS polling)
 - **Browser Extension**: Manifest V3 Chrome extension using wxt (wxt.dev)
 
+### Repository Structure
+
+Full monorepo layout, tooling, and migration workflow: [`docs/repo-structure.md`](docs/repo-structure.md)
+
 ### Data Model
 
-Full SQL schema with indexes and constraints: [`docs/schema.sql`](docs/schema.sql)
+Full SQL schema reference: [`docs/schema.sql`](docs/schema.sql). Migrations are applied incrementally from `migrations/*.sql` (see repo-structure doc for workflow).
 
 #### Document
 Core entity. All content types are stored as documents.

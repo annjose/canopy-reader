@@ -30,10 +30,10 @@
 - Read `Cf-Access-Jwt-Assertion` header in API routes to verify identity
 
 ### 1.4 Database Migrations
-- Create migration system (simple numbered SQL files in `migrations/`)
-- First migration: `documents` table (from `docs/schema.sql`, Phase 1 section only)
-- Script to apply migrations via `wrangler d1 execute`
-- Seed script with sample data for development
+- Migration files live in `migrations/` at the repo root (see [`docs/repo-structure.md`](../../docs/repo-structure.md) for workflow)
+- First migration: `migrations/0001_create_documents.sql` — `documents` table with indexes
+- Apply migrations via `./scripts/migrate.sh --local` (dev) or `--remote` (prod)
+- Seed script with sample data for development: `scripts/seed.ts`
 
 ### 1.5 R2 Storage Utilities
 - Helper functions: `uploadToR2(key, data)`, `getFromR2(key)`, `deleteFromR2(key)`
@@ -256,81 +256,65 @@ Displayed when a document is selected in list view or open in reader.
 ## 7. Development & Deployment
 
 ### 7.1 Local Development
-- `npm run dev` — Next.js dev server with hot reload
-- Local D1 with `wrangler d1 execute --local` for migrations
+- `pnpm dev` — Next.js dev server with hot reload (via Turborepo)
+- Local D1 with `./scripts/migrate.sh --local` for migrations
 - Local R2 with miniflare (bundled in wrangler)
-- Seed script: `npm run seed` — populates DB with sample articles
+- Seed script: `pnpm seed` — populates DB with sample articles
 
 ### 7.2 Deployment
-- `npm run deploy` — builds + deploys via wrangler
+- `pnpm deploy:web` — builds + deploys via wrangler
 - Production D1 database
 - Production R2 bucket
 - Cloudflare Access protects the domain
 
 ### 7.3 Project Structure
+
+The project uses a **pnpm + Turborepo monorepo**. See [`docs/repo-structure.md`](../../docs/repo-structure.md) for full layout and rationale.
+
+Phase 1 code lives primarily in `apps/web/`:
+
 ```
-canopy/
-├── src/
-│   ├── app/                    # Next.js App Router pages
-│   │   ├── layout.tsx          # Root layout with AppShell
-│   │   ├── page.tsx            # Home / redirect to inbox
-│   │   ├── library/
-│   │   │   └── page.tsx        # Document list view
-│   │   ├── read/
-│   │   │   └── [id]/
-│   │   │       └── page.tsx    # Reader view
-│   │   └── api/
-│   │       └── documents/
-│   │           ├── route.ts    # GET (list), POST (create)
-│   │           └── [id]/
-│   │               ├── route.ts    # GET, PATCH, DELETE
-│   │               ├── content/
-│   │               │   └── route.ts  # GET content HTML
-│   │               └── restore/
-│   │                   └── route.ts  # POST restore from trash
-│   ├── components/
-│   │   ├── layout/
-│   │   │   ├── app-shell.tsx
-│   │   │   ├── sidebar.tsx
-│   │   │   └── right-panel.tsx
-│   │   ├── documents/
-│   │   │   ├── document-list.tsx
-│   │   │   ├── document-row.tsx
-│   │   │   ├── status-tabs.tsx
-│   │   │   └── save-dialog.tsx
-│   │   ├── reader/
-│   │   │   ├── reader-view.tsx
-│   │   │   ├── table-of-contents.tsx
-│   │   │   ├── reader-toolbar.tsx
-│   │   │   └── progress-bar.tsx
-│   │   ├── search/
-│   │   │   └── search-palette.tsx
-│   │   └── keyboard/
-│   │       ├── shortcut-provider.tsx
-│   │       └── shortcuts-help.tsx
-│   ├── lib/
-│   │   ├── db.ts               # D1 query helpers
-│   │   ├── r2.ts               # R2 storage helpers
-│   │   ├── parser.ts           # Article content extraction (Readability)
-│   │   ├── utils.ts            # Shared utilities (nanoid, dates, etc.)
-│   │   └── types.ts            # TypeScript types for Document, etc.
-│   └── hooks/
-│       ├── use-keyboard-shortcuts.ts
-│       ├── use-documents.ts    # SWR/React Query hook for document list
-│       └── use-reading-progress.ts
+canopy-reader/
+├── apps/
+│   └── web/                        # Next.js app
+│       ├── src/
+│       │   ├── app/                # App Router pages & API routes
+│       │   │   ├── layout.tsx
+│       │   │   ├── page.tsx
+│       │   │   ├── library/
+│       │   │   ├── read/[id]/
+│       │   │   └── api/documents/
+│       │   ├── components/
+│       │   │   ├── layout/         # app-shell, sidebar, right-panel
+│       │   │   ├── documents/      # document-list, document-row, status-tabs, save-dialog
+│       │   │   ├── reader/         # reader-view, toc, toolbar, progress-bar
+│       │   │   ├── search/         # search-palette
+│       │   │   └── keyboard/       # shortcut-provider, shortcuts-help
+│       │   ├── lib/
+│       │   │   ├── db.ts           # D1 query helpers
+│       │   │   ├── r2.ts           # R2 storage helpers
+│       │   │   ├── parser.ts       # Article content extraction (Readability)
+│       │   │   └── utils.ts        # Shared utilities (nanoid, dates, etc.)
+│       │   └── hooks/
+│       │       ├── use-keyboard-shortcuts.ts
+│       │       ├── use-documents.ts    # SWR hook for document list
+│       │       └── use-reading-progress.ts
+│       ├── wrangler.toml
+│       ├── next.config.ts
+│       ├── tailwind.config.ts
+│       └── package.json
+├── packages/
+│   └── shared/                     # Shared types & constants (@canopy/shared)
 ├── migrations/
 │   └── 0001_create_documents.sql
-├── public/
+├── scripts/
+│   ├── migrate.sh
+│   └── seed.ts
 ├── docs/
-│   ├── schema.sql
-│   └── plans/
-│       └── phase-1-foundation.md
-├── wrangler.toml
-├── next.config.ts
-├── tailwind.config.ts
-├── tsconfig.json
-├── package.json
-└── canopy-spec.md
+├── pnpm-workspace.yaml
+├── turbo.json
+├── package.json                    # Root workspace config
+└── tsconfig.json                   # Root TS settings
 ```
 
 ---
