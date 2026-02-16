@@ -51,7 +51,10 @@ export interface Document {
 /** Tag for organizing documents */
 export interface Tag {
   id: string;
+  /** Display name (spaces/case allowed) */
   name: string;
+  /** Kebab-case slug used in URLs and for uniqueness */
+  slug: string;
   color: string | null;
   created_at: string;
 }

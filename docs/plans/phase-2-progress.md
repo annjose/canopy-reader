@@ -23,8 +23,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 2 — Backend DB helpers
-- Status: Not started
-- Notes:
+- Status: Done
+- Notes: Added D1 helper modules for tags, document notes (1 per doc), and highlights.
 - PR/Commit:
 
 ### Milestone 3 — API routes (tags, document tags, notes, highlights)
@@ -33,8 +33,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 4 — Shared types for Phase 2 payloads
-- Status: Not started
-- Notes:
+- Status: In progress
+- Notes: Added `Tag.slug` to shared type and updated schema reference.
 - PR/Commit:
 
 ### Milestone 5 — UI: Right Panel Notebook tab

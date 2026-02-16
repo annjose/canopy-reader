@@ -59,10 +59,13 @@ CREATE INDEX idx_documents_is_favorite ON documents(is_favorite);
 
 CREATE TABLE tags (
   id TEXT PRIMARY KEY,                              -- nanoid
-  name TEXT NOT NULL UNIQUE,                        -- kebab-case, e.g. 'machine-learning'
+  name TEXT NOT NULL,                               -- display name (spaces/case allowed)
+  slug TEXT NOT NULL UNIQUE,                        -- kebab-case slug for URLs/uniqueness
   color TEXT,                                       -- optional hex color
   created_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
+
+CREATE INDEX idx_tags_name ON tags(name);
 
 CREATE TABLE document_tags (
   document_id TEXT NOT NULL REFERENCES documents(id) ON DELETE CASCADE,
@@ -71,6 +74,7 @@ CREATE TABLE document_tags (
 );
 
 CREATE INDEX idx_document_tags_tag_id ON document_tags(tag_id);
+CREATE INDEX idx_document_tags_document_id ON document_tags(document_id);
 
 CREATE TABLE highlights (
   id TEXT PRIMARY KEY,                              -- nanoid
@@ -78,7 +82,7 @@ CREATE TABLE highlights (
   text TEXT NOT NULL,                               -- the highlighted text
   note TEXT,                                        -- optional note on this highlight
   color TEXT NOT NULL DEFAULT 'yellow',             -- yellow | blue | green | red | purple
-  position_data TEXT,                               -- JSON: {start, end, chapter, percentage}
+  position_data TEXT,                               -- JSON: {start, end, quote, ...}
   created_at TEXT NOT NULL DEFAULT (datetime('now')),
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
@@ -93,7 +97,7 @@ CREATE TABLE document_notes (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX idx_document_notes_document_id ON document_notes(document_id);
+CREATE UNIQUE INDEX idx_document_notes_document_id_unique ON document_notes(document_id);
 
 ----------------------------------------------------------------------
 -- Phase 3: RSS Feeds
