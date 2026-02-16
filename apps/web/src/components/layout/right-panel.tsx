@@ -5,6 +5,8 @@ import { useAppShell } from "./app-shell";
 import { useNotebook } from "@/hooks/use-notebook";
 import { deleteHighlight, updateHighlight, upsertDocumentNote } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
+import type { Tag } from "@canopy/shared";
+import { TagPickerDialog } from "@/components/tags/tag-picker-dialog";
 
 type TabKey = "info" | "notebook";
 
@@ -91,7 +93,7 @@ export function RightPanel() {
           documentId={doc.id}
           isLoading={isLoading}
           error={error}
-          tags={tags.map((t) => t.name)}
+          tags={tags}
           note={note?.content ?? ""}
           highlights={highlights.map((h) => ({
             id: h.id,
@@ -189,13 +191,14 @@ function NotebookTab({
   documentId: string;
   isLoading: boolean;
   error: unknown;
-  tags: string[];
+  tags: Tag[];
   note: string;
   highlights: { id: string; text: string; color: string; note: string }[];
   onMutate: () => void;
 }) {
   const [noteDraft, setNoteDraft] = useState(note);
   const [noteSaving, setNoteSaving] = useState(false);
+  const [tagDialogOpen, setTagDialogOpen] = useState(false);
 
   useEffect(() => {
     setNoteDraft(note);
@@ -231,23 +234,42 @@ function NotebookTab({
   return (
     <div className="space-y-5">
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-          Tags
-        </h3>
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Tags
+          </h3>
+          <button
+            type="button"
+            onClick={() => setTagDialogOpen(true)}
+            className="rounded px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200"
+          >
+            Edit
+          </button>
+        </div>
+
         <div className="mt-2 flex flex-wrap gap-2">
           {tags.length === 0 ? (
             <span className="text-sm text-gray-400">No tags</span>
           ) : (
             tags.map((t) => (
               <span
-                key={t}
+                key={t.id}
                 className="rounded-full bg-gray-200 px-2.5 py-1 text-xs text-gray-700"
+                title={t.slug}
               >
-                {t}
+                {t.name}
               </span>
             ))
           )}
         </div>
+
+        <TagPickerDialog
+          documentId={documentId}
+          initialTags={tags}
+          open={tagDialogOpen}
+          onOpenChange={setTagDialogOpen}
+          onUpdated={onMutate}
+        />
       </section>
 
       <section>

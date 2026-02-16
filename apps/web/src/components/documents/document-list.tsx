@@ -60,11 +60,12 @@ export function DocumentList() {
     ? { is_trashed: true, sort }
     : isFavorite
       ? { is_favorite: true, sort }
-      : tag
-        ? { tag, sort }
-        : type
-          ? { type, sort }
-          : { status, sort };
+      : {
+          status,
+          sort,
+          ...(type ? { type } : {}),
+          ...(tag ? { tag } : {}),
+        };
 
   const { documents, nextCursor, isLoading, mutate } = useDocuments(params);
   const {
@@ -168,9 +169,10 @@ export function DocumentList() {
   }
 
   function navigateToStatus(next: DocumentStatus) {
-    const sp = new URLSearchParams();
+    const sp = new URLSearchParams(searchParams.toString());
     sp.set("status", next);
     if (sort) sp.set("sort", sort);
+    sp.delete("cursor");
     router.push(`/library?${sp.toString()}`);
   }
 

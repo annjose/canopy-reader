@@ -1,4 +1,4 @@
-import type { Document, DocumentNote, DocumentStatus, Highlight } from "@canopy/shared";
+import type { Document, DocumentNote, DocumentStatus, Highlight, Tag } from "@canopy/shared";
 
 const BASE = "/api/documents";
 
@@ -75,6 +75,42 @@ export function updateHighlight(
 export function deleteHighlight(highlightId: string) {
   return fetchJSON<{ success: boolean }>(`/api/highlights/${highlightId}`, {
     method: "DELETE",
+  });
+}
+
+export function listTags() {
+  return fetchJSON<{ tags: Tag[] }>("/api/tags");
+}
+
+export async function createTag(
+  name: string,
+  color?: string | null,
+): Promise<Tag> {
+  const res = await fetch("/api/tags", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ name, color: color ?? null }),
+  });
+
+  // If tag already exists, API returns 409 with `{ error, tag }`.
+  if (res.status === 409) {
+    const body = (await res.json().catch(() => ({}))) as { tag?: Tag };
+    if (body.tag) return body.tag;
+  }
+
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    throw new Error((body as { error?: string }).error || res.statusText);
+  }
+
+  return res.json() as Promise<Tag>;
+}
+
+export function setDocumentTags(documentId: string, tagIds: string[]) {
+  return fetchJSON<{ tags: Tag[] }>(`${BASE}/${documentId}/tags`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ tagIds }),
   });
 }
 
