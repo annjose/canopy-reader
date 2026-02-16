@@ -5,12 +5,15 @@ import { useDocument, useDocumentContent } from "@/hooks/use-document";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useAppShell } from "@/components/layout/app-shell";
 import { ReaderToolbar } from "@/components/reader/reader-toolbar";
-import { ReaderView } from "@/components/reader/reader-view";
+import {
+  ReaderView,
+  type ReaderViewHandle,
+} from "@/components/reader/reader-view";
 import { ProgressBar } from "@/components/reader/progress-bar";
 import { deleteDocument, updateDocument } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_LABELS } from "@canopy/shared";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ReadPage() {
   const { id } = useParams<{ id: string }>();
@@ -28,6 +31,7 @@ export default function ReadPage() {
     searchOpen,
   } = useAppShell();
 
+  const readerRef = useRef<ReaderViewHandle>(null);
   const [tocOpen, setTocOpen] = useState(false);
 
   useEffect(() => {
@@ -132,6 +136,7 @@ export default function ReadPage() {
       v: openOriginal,
       p: () => setRightPanelOpen(!rightPanelOpen),
       c: () => setTocOpen((o) => !o),
+      h: () => readerRef.current?.highlightSelection(),
       "?": () => setShortcutsHelpOpen(true),
     },
   });
@@ -183,7 +188,7 @@ export default function ReadPage() {
         </div>
       </header>
 
-      <ReaderView id={id} />
+      <ReaderView ref={readerRef} id={id} />
     </>
   );
 }

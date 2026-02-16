@@ -6,6 +6,8 @@ import { useNotebook } from "@/hooks/use-notebook";
 import { deleteHighlight, updateHighlight, upsertDocumentNote } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import type { Tag } from "@canopy/shared";
+import type { HighlightColor } from "@canopy/shared";
+import { HIGHLIGHT_COLORS } from "@canopy/shared";
 import { TagPickerDialog } from "@/components/tags/tag-picker-dialog";
 
 type TabKey = "info" | "notebook";
@@ -322,6 +324,30 @@ function NotebookTab({
   );
 }
 
+const HL_BORDER_COLORS: Record<string, string> = {
+  yellow: "border-l-yellow-400",
+  blue: "border-l-blue-400",
+  green: "border-l-green-400",
+  red: "border-l-red-400",
+  purple: "border-l-purple-400",
+};
+
+const HL_BG_COLORS: Record<string, string> = {
+  yellow: "bg-yellow-50",
+  blue: "bg-blue-50",
+  green: "bg-green-50",
+  red: "bg-red-50",
+  purple: "bg-purple-50",
+};
+
+const HL_DOT_COLORS: Record<string, string> = {
+  yellow: "bg-yellow-300",
+  blue: "bg-blue-300",
+  green: "bg-green-400",
+  red: "bg-red-300",
+  purple: "bg-purple-300",
+};
+
 function HighlightCard({
   highlight,
   onMutate,
@@ -332,6 +358,7 @@ function HighlightCard({
   const [noteDraft, setNoteDraft] = useState(highlight.note);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
+  const [noteOpen, setNoteOpen] = useState(false);
 
   useEffect(() => {
     setNoteDraft(highlight.note);
@@ -357,9 +384,6 @@ function HighlightCard({
   }
 
   async function remove() {
-    const ok = confirm("Delete this highlight?");
-    if (!ok) return;
-
     try {
       setDeleting(true);
       await deleteHighlight(highlight.id);
@@ -376,48 +400,119 @@ function HighlightCard({
     }
   }
 
+  async function changeColor(color: HighlightColor) {
+    try {
+      await updateHighlight(highlight.id, { color });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to update color",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
+  }
+
+  function scrollToHighlight() {
+    const el = document.querySelector(
+      `[data-highlight-id="${highlight.id}"]`,
+    );
+    if (!el) return;
+
+    // Scroll the <main> container to bring the highlight into view
+    const main = document.querySelector("main");
+    if (main) {
+      const mainRect = main.getBoundingClientRect();
+      const elRect = el.getBoundingClientRect();
+      const scrollTop = main.scrollTop + (elRect.top - mainRect.top) - mainRect.height / 2 + elRect.height / 2;
+      main.scrollTo({ top: scrollTop, behavior: "smooth" });
+    } else {
+      el.scrollIntoView({ behavior: "smooth", block: "center" });
+    }
+
+    // Flash the highlight to draw attention
+    el.classList.add("canopy-highlight-flash");
+    setTimeout(() => el.classList.remove("canopy-highlight-flash"), 1500);
+  }
+
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-3">
+    <div
+      className={`rounded-lg border border-gray-200 border-l-[3px] ${HL_BORDER_COLORS[highlight.color] ?? "border-l-yellow-400"} bg-white p-3 cursor-pointer`}
+      onClick={scrollToHighlight}
+    >
       <div className="flex items-start justify-between gap-2">
-        <div className="min-w-0">
-          <div className="text-xs text-gray-400 mb-1">{highlight.color}</div>
-          <div className="text-sm text-gray-800">“{highlight.text}”</div>
+        <div className="min-w-0 flex-1">
+          <div className={`rounded px-2 py-1.5 text-sm text-gray-800 italic ${HL_BG_COLORS[highlight.color] ?? "bg-yellow-50"}`}>
+            &ldquo;{highlight.text}&rdquo;
+          </div>
         </div>
+      </div>
+
+      <div className="mt-2 flex items-center gap-1.5">
+        <span
+          className={`inline-block h-3 w-3 rounded-full ${HL_DOT_COLORS[highlight.color] ?? "bg-yellow-300"}`}
+          title={highlight.color}
+        />
+        {HIGHLIGHT_COLORS.filter((c) => c !== highlight.color).map((c) => (
+          <button
+            key={c}
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              void changeColor(c);
+            }}
+            className={`h-3 w-3 rounded-full opacity-40 hover:opacity-100 transition-opacity ${HL_DOT_COLORS[c]}`}
+            title={`Change to ${c}`}
+          />
+        ))}
+        <div className="flex-1" />
         <button
           type="button"
-          onClick={() => void remove()}
+          onClick={(e) => {
+            e.stopPropagation();
+            setNoteOpen((o) => !o);
+          }}
+          className="text-xs text-gray-400 hover:text-gray-600"
+          title="Toggle note"
+        >
+          {highlight.note ? "Edit note" : "Add note"}
+        </button>
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            void remove();
+          }}
           disabled={deleting}
-          className="rounded px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+          className="text-xs text-gray-400 hover:text-red-500 disabled:opacity-50"
           title="Delete highlight"
         >
-          {deleting ? "Deleting…" : "Delete"}
+          {deleting ? "..." : "Delete"}
         </button>
       </div>
 
-      <div className="mt-3">
-        <div className="flex items-center justify-between gap-2">
-          <div className="text-xs font-medium text-gray-500">Note</div>
-          <button
-            type="button"
-            onClick={() => void save()}
-            disabled={!dirty || saving}
-            className={`rounded px-2 py-1 text-xs font-medium ${
-              !dirty || saving
-                ? "bg-gray-100 text-gray-400"
-                : "bg-gray-900 text-white hover:bg-gray-800"
-            }`}
-          >
-            {saving ? "Saving…" : "Save"}
-          </button>
+      {(noteOpen || highlight.note) && (
+        <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+          <textarea
+            value={noteDraft}
+            onChange={(e) => setNoteDraft(e.target.value)}
+            placeholder="Add a note..."
+            className="w-full min-h-[56px] resize-y rounded-md border border-gray-200 bg-white p-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300"
+          />
+          {dirty && (
+            <div className="mt-1 flex justify-end">
+              <button
+                type="button"
+                onClick={() => void save()}
+                disabled={saving}
+                className="rounded px-2 py-1 text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50"
+              >
+                {saving ? "Saving..." : "Save"}
+              </button>
+            </div>
+          )}
         </div>
-
-        <textarea
-          value={noteDraft}
-          onChange={(e) => setNoteDraft(e.target.value)}
-          placeholder="Add a note…"
-          className="mt-2 w-full min-h-[72px] resize-y rounded-md border border-gray-200 bg-white p-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300"
-        />
-      </div>
+      )}
     </div>
   );
 }

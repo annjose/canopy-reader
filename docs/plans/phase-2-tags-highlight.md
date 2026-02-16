@@ -31,10 +31,6 @@ See [`docs/decisions.md`](../decisions.md) for the running log.
    - Store `tags.name` as the user-entered display name.
    - Store `tags.slug` as a normalized kebab-case slug used in URLs and for uniqueness.
    - Canonical filter URL: `/library?tag=<slug>`.
-3. **Highlights**: take the safer approach first.
-   - Phase 2 core: **capture + save + show in Notebook list**.
-   - In-text rendering is tracked separately as **Milestone 8 (Backlog)**.
-4. **Highlight anchoring** (initial): store **text offsets + quote text** in `position_data` JSON.
 
 ---
 
@@ -243,7 +239,7 @@ In reader view (`ReaderView` or wrapper):
 
 ---
 
-## Milestone 8 (Backlog) — In-text highlight rendering (higher risk)
+## Milestone 8 — In-text highlight rendering (higher risk)
 
 ### Work
 - Fetch highlights for the document.

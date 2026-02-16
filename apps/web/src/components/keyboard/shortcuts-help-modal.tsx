@@ -59,6 +59,7 @@ export function ShortcutsHelpModal() {
             <Shortcut k="v" d="Open original URL" />
             <Shortcut k="p" d="Toggle right panel" />
             <Shortcut k="c" d="Toggle table of contents" />
+            <Shortcut k="h" d="Highlight selected text" />
             <Shortcut k="?" d="Show this help" />
           </Section>
         </div>
