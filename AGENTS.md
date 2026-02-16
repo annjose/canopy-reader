@@ -62,6 +62,20 @@ pnpm typecheck        # Type-check all packages
 - **Commit messages must briefly explain what changed and why.** Include a short subject line plus 2–5 bullet points in the body when useful.
 - **Radix Dialog requirement:** any component built on Radix `Dialog` (including shadcn `Dialog`, `Sheet`, `CommandDialog`) must include a `DialogTitle` (can be `sr-only`) inside the content to avoid accessibility runtime errors.
 
+### Phase planning & progress tracking
+ - For each new phase (e.g. Phase 2, Phase 3), before implementing:
+     - Create a detailed plan file in docs/plans/ named: phase-N-short-title.md
+     - Create a progress tracking file in docs/plans/ named: phase-N-progress.md
+     - Define clear milestones (and sub-tasks) in the plan file, and mirror those milestones as a checklist/table in the progress file.
+     - Use docs/plans/phase-2-tags-highlight.md and docs/plans/phase-2-progress.md as the reference format.
+ - During implementation:
+     - Update phase-N-progress.md as work starts/finishes:
+           - when starting a milestone: mark it In progress / Next
+           - when finishing a milestone: mark it Done
+     - Before proposing a commit message for a milestone, update the corresponding entry in phase-N-progress.md to reflect completion and briefly note what changed.
+ - Keep progress tracking accurate:
+     - Don’t mark milestones “Done” until the code is implemented, typechecks/builds, and the relevant UX path is verified.
+
 ## Conventions
 
 - Types live in `packages/shared/src/types.ts`
