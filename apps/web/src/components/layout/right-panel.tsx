@@ -212,6 +212,7 @@ function NotebookTab({
 }) {
   const [noteDraft, setNoteDraft] = useState(note);
   const [noteSaving, setNoteSaving] = useState(false);
+  const [exporting, setExporting] = useState(false);
   const [tagDialogOpen, setTagDialogOpen] = useState(false);
 
   useEffect(() => {
@@ -240,6 +241,41 @@ function NotebookTab({
     }
   }
 
+  async function exportMarkdown() {
+    try {
+      setExporting(true);
+      const res = await fetch(`/api/documents/${documentId}/export`);
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error((body as { error?: string }).error || res.statusText);
+      }
+
+      const contentDisposition = res.headers.get("content-disposition") ?? "";
+      const filenameMatch = contentDisposition.match(/filename=\"([^\"]+)\"/i);
+      const filename = filenameMatch?.[1] ?? "document-notes.md";
+
+      const blob = await res.blob();
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = filename;
+      document.body.appendChild(anchor);
+      anchor.click();
+      anchor.remove();
+      URL.revokeObjectURL(objectUrl);
+
+      toast({ title: "Exported markdown" });
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to export",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setExporting(false);
+    }
+  }
+
   if (isLoading) {
     return <div className="text-sm text-gray-400">Loading notebook…</div>;
   }
@@ -252,6 +288,21 @@ function NotebookTab({
 
   return (
     <div className="space-y-5">
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={() => void exportMarkdown()}
+          disabled={exporting}
+          className={`rounded px-2 py-1 text-xs font-medium ${
+            exporting
+              ? "bg-gray-100 text-gray-400"
+              : "bg-gray-900 text-white hover:bg-gray-800"
+          }`}
+        >
+          {exporting ? "Exporting…" : "Export markdown"}
+        </button>
+      </div>
+
       <section>
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">

@@ -63,8 +63,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 10 — Markdown export
-- Status: Not started
-- Notes:
+- Status: Done
+- Notes: Added `GET /api/documents/[id]/export` to generate markdown with frontmatter + document note + highlights (including highlight notes). Added `Export markdown` action in Notebook tab that downloads the generated `.md` file.
 - PR/Commit:
 
 ### Milestone 11 — UI polish (reading progress, panels, font size, dark mode)
