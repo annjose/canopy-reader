@@ -26,6 +26,9 @@ export function ShortcutsHelpModal() {
           <Section title="Library">
             <Shortcut k="/" d="Search" />
             <Shortcut k="Ctrl/⌘ K" d="Search (command palette)" />
+            <Shortcut k="Ctrl/⌘ /" d="Show keyboard shortcuts" />
+            <Shortcut k="n" d="Save URL" />
+            <Shortcut k="[ / ]" d="Toggle left / right panel" />
             <div className="mt-3" />
             <Shortcut k="j / k" d="Next / previous item" />
             <Shortcut k="↑ / ↓" d="Next / previous item" />
@@ -50,6 +53,9 @@ export function ShortcutsHelpModal() {
           <Section title="Reader">
             <Shortcut k="/" d="Search" />
             <Shortcut k="Ctrl/⌘ K" d="Search (command palette)" />
+            <Shortcut k="Ctrl/⌘ /" d="Show keyboard shortcuts" />
+            <Shortcut k="n" d="Save URL" />
+            <Shortcut k="[ / ]" d="Toggle left / right panel" />
             <div className="mt-3" />
             <Shortcut k="j / k" d="Scroll down / up" />
             <Shortcut k="↑ / ↓" d="Scroll up / down" />

@@ -69,7 +69,9 @@ This doc tracks implementation progress for Phase 2 against the plan:
 
 ### Milestone 11 — UI polish (reading progress, panels, font size, dark mode)
 - Status: In progress
-- Notes: Started 11.1 (reading progress persistence): reader now restores last known position and writes debounced `reading_progress` + `last_read_position` updates to D1 while reading, with a flush on leave.
+- Notes: 
+ - 11.1 done (reader restores last known position and writes debounced `reading_progress` + `last_read_position` updates to D1 with flush on leave). 
+ - 11.2 done (global panel shortcuts `[`/`]`, `Ctrl/⌘ + /` for shortcuts help, and `n` to open Save URL dialog; fixed `]` key detection using bracket key codes).
 - PR/Commit:
 
 ---

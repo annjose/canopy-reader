@@ -101,22 +101,50 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  // Global shortcuts: search + help
+  function toggleLeftPanel() {
+    if (isDesktop) {
+      setSidebarCollapsed((collapsed) => !collapsed);
+      return;
+    }
+    setMobileSidebarOpen((open) => !open);
+  }
+
+  function toggleRightPanel() {
+    setRightPanelOpen((open) => !open);
+  }
+
+  // Global shortcuts: search + help + panel toggles + save URL
   useKeyboardShortcuts({
-    enabled: !saveDialogOpen && !shortcutsHelpOpen,
+    enabled: !saveDialogOpen && !shortcutsHelpOpen && !searchOpen,
     bindings: {
       "?": () => setShortcutsHelpOpen(true),
       "/": () => setSearchOpen(true),
+      "[": toggleLeftPanel,
+      "]": toggleRightPanel,
+      n: () => setSaveDialogOpen(true),
     },
   });
 
-  // Cmd/Ctrl+K opens search (common command palette shortcut).
+  // Modifier shortcuts: Cmd/Ctrl+K search, Cmd/Ctrl+/ help.
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.defaultPrevented) return;
+      if (isEditableTarget(e.target)) return;
+
+      // Cmd/Ctrl + / => open shortcuts help
+      if (
+        (e.metaKey || e.ctrlKey) &&
+        !e.altKey &&
+        (e.code === "Slash" || e.key === "/" || e.key === "?")
+      ) {
+        e.preventDefault();
+        setShortcutsHelpOpen(true);
+        return;
+      }
+
+      // Cmd/Ctrl + K => toggle search palette
       if (!(e.metaKey || e.ctrlKey)) return;
       if (e.key.toLowerCase() !== "k") return;
-      if (isEditableTarget(e.target)) return;
 
       e.preventDefault();
       setSearchOpen((open) => !open);

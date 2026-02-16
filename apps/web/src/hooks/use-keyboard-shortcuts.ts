@@ -29,6 +29,10 @@ function isEditableElement(target: EventTarget | null): boolean {
 }
 
 function normalizeKey(event: KeyboardEvent): string {
+  // Use physical key codes for layout-sensitive symbols.
+  if (event.code === "BracketLeft") return "[";
+  if (event.code === "BracketRight") return "]";
+
   // Keep `#` as `#` (Shift+3) etc.
   const k = event.key;
   // Common keys we care about.
