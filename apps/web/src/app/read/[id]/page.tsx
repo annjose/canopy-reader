@@ -85,9 +85,13 @@ export default function ReadPage() {
     });
   }, []);
 
+  const docIdRef = useRef(id);
+  docIdRef.current = id;
+
   const persistReadingProgress = useCallback(
     async (force = false) => {
-      if (!doc) return;
+      const docId = docIdRef.current;
+      if (!docId) return;
       const el = document.querySelector("main");
       if (!(el instanceof HTMLElement)) return;
 
@@ -102,29 +106,16 @@ export default function ReadPage() {
       const lastReadPosition = buildLastReadPosition(el, progress);
 
       try {
-        await updateDocument(doc.id, {
+        await updateDocument(docId, {
           reading_progress: progress,
           last_read_position: lastReadPosition,
         });
         lastSavedProgressRef.current = progress;
-
-        // Keep local document data in sync without forcing revalidation.
-        await mutate(
-          (current) =>
-            current
-              ? {
-                  ...current,
-                  reading_progress: progress,
-                  last_read_position: lastReadPosition,
-                }
-              : current,
-          false,
-        );
       } catch {
         // Best effort only; reading should continue even if save fails.
       }
     },
-    [buildLastReadPosition, computeProgress, doc, mutate],
+    [buildLastReadPosition, computeProgress],
   );
 
   // Restore last scroll position on open (best effort).
@@ -166,8 +157,11 @@ export default function ReadPage() {
   }, [content, doc]);
 
   // Debounced reading progress persistence.
+  const persistRef = useRef(persistReadingProgress);
+  persistRef.current = persistReadingProgress;
+
   useEffect(() => {
-    if (!doc) return;
+    if (!id) return;
 
     const el = document.querySelector("main");
     if (!(el instanceof HTMLElement)) return;
@@ -178,7 +172,7 @@ export default function ReadPage() {
       }
 
       progressDebounceRef.current = window.setTimeout(() => {
-        void persistReadingProgress(false);
+        void persistRef.current(false);
       }, 1500);
     }
 
@@ -187,7 +181,7 @@ export default function ReadPage() {
         window.clearTimeout(progressDebounceRef.current);
         progressDebounceRef.current = null;
       }
-      void persistReadingProgress(true);
+      void persistRef.current(true);
     }
 
     el.addEventListener("scroll", onScroll, { passive: true });
@@ -200,7 +194,7 @@ export default function ReadPage() {
       window.removeEventListener("pagehide", flushNow);
       flushNow();
     };
-  }, [doc, persistReadingProgress]);
+  }, [id]);
 
   function scrollMainBy(deltaY: number) {
     const el = document.querySelector("main");
