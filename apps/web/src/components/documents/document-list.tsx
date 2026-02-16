@@ -8,6 +8,7 @@ import { useAppShell } from "@/components/layout/app-shell";
 import { deleteDocument, updateDocument } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_LABELS } from "@canopy/shared";
+import { Button } from "@/components/ui/button";
 import { DocumentRow } from "./document-row";
 import type { DocumentStatus } from "@canopy/shared";
 
@@ -23,6 +24,25 @@ const EMPTY_MESSAGES: Record<DocumentStatus, string> = {
   later: "No articles saved for later.",
   archive: "Your archive is empty.",
 };
+
+function InfoIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 7v4" />
+      <path d="M8 5h.01" />
+    </svg>
+  );
+}
 
 export function DocumentList() {
   const searchParams = useSearchParams();
@@ -48,6 +68,7 @@ export function DocumentList() {
     isDesktop,
     setSelectedDocument,
     setRightPanelOpen,
+    rightPanelOpen,
     saveDialogOpen,
     shortcutsHelpOpen,
     setShortcutsHelpOpen,
@@ -208,7 +229,19 @@ export function DocumentList() {
         {heading && (
           <h2 className="text-sm font-semibold text-gray-700">{heading}</h2>
         )}
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-1">
+          {!isDesktop && (
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setRightPanelOpen(!rightPanelOpen)}
+              disabled={!selectedDoc}
+              aria-label="Details"
+              title="Details"
+            >
+              <InfoIcon />
+            </Button>
+          )}
           <select
             value={sort}
             onChange={(e) => handleSort(e.target.value)}
