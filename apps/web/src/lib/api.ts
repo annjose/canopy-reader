@@ -1,4 +1,4 @@
-import type { Document, DocumentStatus } from "@canopy/shared";
+import type { Document, DocumentNote, DocumentStatus, Highlight } from "@canopy/shared";
 
 const BASE = "/api/documents";
 
@@ -50,6 +50,31 @@ export function deleteDocument(id: string) {
 export function restoreDocument(id: string) {
   return fetchJSON<{ success: boolean }>(`${BASE}/${id}/restore`, {
     method: "POST",
+  });
+}
+
+export function upsertDocumentNote(documentId: string, content: string) {
+  return fetchJSON<{ note: DocumentNote }>(`${BASE}/${documentId}/note`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ content }),
+  });
+}
+
+export function updateHighlight(
+  highlightId: string,
+  fields: Partial<Pick<Highlight, "note" | "color" | "position_data">>,
+) {
+  return fetchJSON<Highlight>(`/api/highlights/${highlightId}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+}
+
+export function deleteHighlight(highlightId: string) {
+  return fetchJSON<{ success: boolean }>(`/api/highlights/${highlightId}`, {
+    method: "DELETE",
   });
 }
 

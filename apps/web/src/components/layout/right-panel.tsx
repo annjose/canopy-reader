@@ -1,8 +1,10 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAppShell } from "./app-shell";
 import { useNotebook } from "@/hooks/use-notebook";
+import { deleteHighlight, updateHighlight, upsertDocumentNote } from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
 
 type TabKey = "info" | "notebook";
 
@@ -10,9 +12,14 @@ export function RightPanel() {
   const { selectedDocument: doc, setRightPanelOpen } = useAppShell();
   const [tab, setTab] = useState<TabKey>("info");
 
-  const { tags, note, highlights, isLoading, error } = useNotebook(
-    tab === "notebook" ? doc?.id ?? null : null,
-  );
+  const {
+    tags,
+    note,
+    highlights,
+    isLoading,
+    error,
+    mutate: mutateNotebook,
+  } = useNotebook(tab === "notebook" ? doc?.id ?? null : null);
 
   const infoRows: [string, string | null | undefined][] = useMemo(() => {
     if (!doc) return [];
@@ -81,6 +88,7 @@ export function RightPanel() {
         <InfoTab docImageUrl={doc.image_url} rows={infoRows} docUrl={doc.url} />
       ) : (
         <NotebookTab
+          documentId={doc.id}
           isLoading={isLoading}
           error={error}
           tags={tags.map((t) => t.name)}
@@ -91,6 +99,7 @@ export function RightPanel() {
             color: h.color,
             note: h.note ?? "",
           }))}
+          onMutate={mutateNotebook}
         />
       )}
     </aside>
@@ -169,18 +178,46 @@ function InfoTab({
 }
 
 function NotebookTab({
+  documentId,
   isLoading,
   error,
   tags,
   note,
   highlights,
+  onMutate,
 }: {
+  documentId: string;
   isLoading: boolean;
   error: unknown;
   tags: string[];
   note: string;
   highlights: { id: string; text: string; color: string; note: string }[];
+  onMutate: () => void;
 }) {
+  const [noteDraft, setNoteDraft] = useState(note);
+  const [noteSaving, setNoteSaving] = useState(false);
+
+  useEffect(() => {
+    setNoteDraft(note);
+  }, [note]);
+
+  async function saveNote() {
+    try {
+      setNoteSaving(true);
+      await upsertDocumentNote(documentId, noteDraft);
+      toast({ title: "Saved note" });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to save note",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setNoteSaving(false);
+    }
+  }
+
   if (isLoading) {
     return <div className="text-sm text-gray-400">Loading notebook…</div>;
   }
@@ -188,6 +225,8 @@ function NotebookTab({
   if (error) {
     return <div className="text-sm text-gray-400">Failed to load notebook.</div>;
   }
+
+  const noteDirty = noteDraft !== note;
 
   return (
     <div className="space-y-5">
@@ -212,12 +251,31 @@ function NotebookTab({
       </section>
 
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
-          Note
-        </h3>
-        <div className="mt-2 whitespace-pre-wrap rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-700">
-          {note.trim() ? note : <span className="text-gray-400">No note</span>}
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+            Note
+          </h3>
+          <button
+            type="button"
+            onClick={() => void saveNote()}
+            disabled={!noteDirty || noteSaving}
+            className={`rounded px-2 py-1 text-xs font-medium ${
+              !noteDirty || noteSaving
+                ? "bg-gray-100 text-gray-400"
+                : "bg-gray-900 text-white hover:bg-gray-800"
+            }`}
+            title={noteDirty ? "Save note" : "No changes"}
+          >
+            {noteSaving ? "Saving…" : "Save"}
+          </button>
         </div>
+
+        <textarea
+          value={noteDraft}
+          onChange={(e) => setNoteDraft(e.target.value)}
+          placeholder="Write a note (markdown)…"
+          className="mt-2 w-full min-h-[120px] resize-y rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300"
+        />
       </section>
 
       <section>
@@ -229,24 +287,115 @@ function NotebookTab({
             <div className="text-sm text-gray-400">No highlights</div>
           ) : (
             highlights.map((h) => (
-              <div
+              <HighlightCard
                 key={h.id}
-                className="rounded-lg border border-gray-200 bg-white p-3"
-              >
-                <div className="text-xs text-gray-400 mb-1">
-                  {h.color}
-                </div>
-                <div className="text-sm text-gray-800">“{h.text}”</div>
-                {h.note.trim() && (
-                  <div className="mt-2 text-sm text-gray-600 whitespace-pre-wrap">
-                    {h.note}
-                  </div>
-                )}
-              </div>
+                highlight={h}
+                onMutate={onMutate}
+              />
             ))
           )}
         </div>
       </section>
+    </div>
+  );
+}
+
+function HighlightCard({
+  highlight,
+  onMutate,
+}: {
+  highlight: { id: string; text: string; color: string; note: string };
+  onMutate: () => void;
+}) {
+  const [noteDraft, setNoteDraft] = useState(highlight.note);
+  const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    setNoteDraft(highlight.note);
+  }, [highlight.note]);
+
+  const dirty = noteDraft !== highlight.note;
+
+  async function save() {
+    try {
+      setSaving(true);
+      await updateHighlight(highlight.id, { note: noteDraft });
+      toast({ title: "Saved highlight" });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to update highlight",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function remove() {
+    const ok = confirm("Delete this highlight?");
+    if (!ok) return;
+
+    try {
+      setDeleting(true);
+      await deleteHighlight(highlight.id);
+      toast({ title: "Deleted highlight" });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to delete highlight",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    } finally {
+      setDeleting(false);
+    }
+  }
+
+  return (
+    <div className="rounded-lg border border-gray-200 bg-white p-3">
+      <div className="flex items-start justify-between gap-2">
+        <div className="min-w-0">
+          <div className="text-xs text-gray-400 mb-1">{highlight.color}</div>
+          <div className="text-sm text-gray-800">“{highlight.text}”</div>
+        </div>
+        <button
+          type="button"
+          onClick={() => void remove()}
+          disabled={deleting}
+          className="rounded px-2 py-1 text-xs text-gray-500 hover:bg-gray-100 disabled:opacity-50"
+          title="Delete highlight"
+        >
+          {deleting ? "Deleting…" : "Delete"}
+        </button>
+      </div>
+
+      <div className="mt-3">
+        <div className="flex items-center justify-between gap-2">
+          <div className="text-xs font-medium text-gray-500">Note</div>
+          <button
+            type="button"
+            onClick={() => void save()}
+            disabled={!dirty || saving}
+            className={`rounded px-2 py-1 text-xs font-medium ${
+              !dirty || saving
+                ? "bg-gray-100 text-gray-400"
+                : "bg-gray-900 text-white hover:bg-gray-800"
+            }`}
+          >
+            {saving ? "Saving…" : "Save"}
+          </button>
+        </div>
+
+        <textarea
+          value={noteDraft}
+          onChange={(e) => setNoteDraft(e.target.value)}
+          placeholder="Add a note…"
+          className="mt-2 w-full min-h-[72px] resize-y rounded-md border border-gray-200 bg-white p-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300"
+        />
+      </div>
     </div>
   );
 }

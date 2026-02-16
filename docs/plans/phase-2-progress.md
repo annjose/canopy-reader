@@ -38,8 +38,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit: bf7802d, 3a7acec
 
 ### Milestone 5 — UI: Right Panel Notebook tab
-- Status: In progress
-- Notes: Implementing Notebook tab UI using `/api/documents/[id]/notebook` (initially read-only).
+- Status: Done
+- Notes: Notebook tab in right panel implemented with document note editor + highlight note editing + delete. Tag editing/picker comes in Milestone 6.
 - PR/Commit:
 
 ### Milestone 6 — UI: Tag picker + tag filter
