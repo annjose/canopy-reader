@@ -58,6 +58,7 @@ pnpm typecheck        # Type-check all packages
 - Use SWR for client-side data fetching
 - Database migrations go in `migrations/` as numbered SQL files
 - Cloudflare account to use: ann.jose@gmail.com (not georgeck@gmail.com)
+- **Do not create commits without explicit user approval.** You may stage changes and propose a commit message, but you must ask before running `git commit`.
 
 ## Conventions
 
