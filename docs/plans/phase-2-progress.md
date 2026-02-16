@@ -28,8 +28,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 3 — API routes (tags, document tags, notes, highlights)
-- Status: Not started
-- Notes:
+- Status: In progress
+- Notes: Tags API routes added (`/api/tags`, `/api/tags/[id]`).
 - PR/Commit:
 
 ### Milestone 4 — Shared types for Phase 2 payloads
