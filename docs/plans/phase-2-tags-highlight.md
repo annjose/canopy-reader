@@ -23,6 +23,8 @@ This plan is designed to be implemented **milestone-by-milestone**, with **testi
 
 ## Decisions (locked in)
 
+See [`docs/decisions.md`](../decisions.md) for the running log.
+
 1. **Document notes**: **one note per document**.
    - Enforce with a unique index on `document_notes(document_id)`.
 2. **Tags**: allow spaces/case for the display name.

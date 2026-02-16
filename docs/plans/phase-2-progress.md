@@ -69,8 +69,6 @@ This doc tracks implementation progress for Phase 2 against the plan:
 
 ---
 
-## Decisions Log (keep short)
+## Decisions Log
 
-- YYYY-MM-DD: Document note cardinality = ???
-- YYYY-MM-DD: Tag normalization rules = ???
-- YYYY-MM-DD: Highlight anchoring strategy = ???
+See [`docs/decisions.md`](../decisions.md).
