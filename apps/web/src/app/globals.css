@@ -6,6 +6,13 @@
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
 
+    /* Reader highlight colors (used by in-text highlight rendering) */
+    --canopy-hl-yellow: rgba(250, 204, 21, 0.35);
+    --canopy-hl-blue: rgba(59, 130, 246, 0.25);
+    --canopy-hl-green: rgba(34, 197, 94, 0.25);
+    --canopy-hl-red: rgba(239, 68, 68, 0.22);
+    --canopy-hl-purple: rgba(168, 85, 247, 0.22);
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
@@ -34,6 +41,36 @@
   body {
     @apply bg-background text-foreground;
   }
+
+  /* Dark mode overrides (hooked up once theme toggle exists) */
+  .dark {
+    --canopy-hl-yellow: rgba(250, 204, 21, 0.25);
+    --canopy-hl-blue: rgba(59, 130, 246, 0.22);
+    --canopy-hl-green: rgba(34, 197, 94, 0.22);
+    --canopy-hl-red: rgba(239, 68, 68, 0.18);
+    --canopy-hl-purple: rgba(168, 85, 247, 0.18);
+  }
+}
+
+/* In-text highlight rendering */
+.canopy-highlight {
+  border-radius: 0.125rem;
+  padding: 0 0.05em;
+}
+.canopy-highlight[data-color="yellow"] {
+  background: var(--canopy-hl-yellow);
+}
+.canopy-highlight[data-color="blue"] {
+  background: var(--canopy-hl-blue);
+}
+.canopy-highlight[data-color="green"] {
+  background: var(--canopy-hl-green);
+}
+.canopy-highlight[data-color="red"] {
+  background: var(--canopy-hl-red);
+}
+.canopy-highlight[data-color="purple"] {
+  background: var(--canopy-hl-purple);
 }
 
 /* Article content typography */

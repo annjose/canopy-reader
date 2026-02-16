@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useSWRConfig } from "swr";
 import { useDocumentContent } from "@/hooks/use-document";
+import { useNotebook } from "@/hooks/use-notebook";
 import { createHighlight } from "@/lib/api";
 import { HIGHLIGHT_COLORS } from "@canopy/shared";
 import type { HighlightColor } from "@canopy/shared";
@@ -18,6 +19,7 @@ type PopoverState = {
 export function ReaderView({ id }: { id: string }) {
   const { mutate } = useSWRConfig();
   const { content, isLoading, error } = useDocumentContent(id);
+  const { highlights } = useNotebook(id);
 
   const articleRef = useRef<HTMLElement>(null);
   const popoverRef = useRef<HTMLDivElement | null>(null);
@@ -35,7 +37,12 @@ export function ReaderView({ id }: { id: string }) {
   const notebookKey = useMemo(() => `/api/documents/${id}/notebook`, [id]);
 
   function closePopover() {
-    setPopover((p) => ({ ...p, open: false }));
+    // Avoid rerenders when popover is already closed (important because a rerender
+    // will reset `dangerouslySetInnerHTML` and wipe rendered highlight spans).
+    setPopover((p) => {
+      if (!p.open) return p;
+      return { ...p, open: false };
+    });
     setNote("");
     setColor("yellow");
   }
@@ -70,15 +77,30 @@ export function ReaderView({ id }: { id: string }) {
     return { text, x: rect.left + rect.width / 2, y: rect.top };
   }
 
+  // --- In-text highlight rendering (best-effort)
+  useEffect(() => {
+    if (popover.open) return;
+    const container = articleRef.current;
+    if (!container) return;
+
+    clearRenderedHighlights(container);
+
+    for (const h of highlights) {
+      const quote = h.text?.trim();
+      if (!quote) continue;
+      renderHighlight(container, quote, h.color);
+    }
+  }, [highlights, popover.open]);
+
   useEffect(() => {
     function onMouseUp() {
       // Let selection settle.
       window.setTimeout(() => {
         const info = selectionInfo();
         if (!info) {
-          // If selection is cleared, also hide popover.
-          const sel = window.getSelection();
-          if (!sel || sel.isCollapsed) closePopover();
+          // Only close if the popover is currently open; otherwise don't update
+          // state (prevents wiping in-text highlight rendering on normal clicks).
+          if (popover.open) closePopover();
           return;
         }
         setPopover({ open: true, text: info.text, x: info.x, y: info.y });
@@ -257,4 +279,126 @@ function highlightSwatchClass(c: HighlightColor): string {
     case "purple":
       return "bg-purple-200";
   }
+}
+
+// --- In-text highlight DOM helpers (best-effort quote matching)
+
+function clearRenderedHighlights(container: HTMLElement) {
+  const spans = container.querySelectorAll<HTMLElement>(
+    'span[data-canopy-highlight="true"]',
+  );
+  spans.forEach((span) => {
+    const parent = span.parentNode;
+    if (!parent) return;
+    while (span.firstChild) {
+      parent.insertBefore(span.firstChild, span);
+    }
+    parent.removeChild(span);
+  });
+  container.normalize();
+}
+
+function canonicalize(s: string): string {
+  // Keep length stable (1-to-1 replacements) so indices remain valid.
+  return s
+    .replace(/\u00a0/g, " ") // nbsp
+    .replace(/[\u2009\u202f]/g, " ") // thin/nnsp
+    .replace(/[\u2018\u2019]/g, "'")
+    .replace(/[\u201c\u201d]/g, '"');
+}
+
+function renderHighlight(
+  container: HTMLElement,
+  quote: string,
+  color: HighlightColor,
+): boolean {
+  const canonQuote = canonicalize(quote);
+  const blocks = container.querySelectorAll<HTMLElement>(
+    "p, li, blockquote, h1, h2, h3, h4, h5, h6",
+  );
+
+  for (const block of Array.from(blocks)) {
+    const nodes = getTextNodes(block);
+    if (nodes.length === 0) continue;
+
+    const raw = nodes.map((n) => n.nodeValue ?? "").join("");
+    const canonRaw = canonicalize(raw);
+    const idx = canonRaw.indexOf(canonQuote);
+    if (idx === -1) continue;
+
+    const start = locateTextOffset(nodes, idx);
+    const end = locateTextOffset(nodes, idx + canonQuote.length);
+    if (!start || !end) continue;
+
+    try {
+      const range = document.createRange();
+      range.setStart(start.node, start.offset);
+      range.setEnd(end.node, end.offset);
+
+      const span = document.createElement("span");
+      span.setAttribute("data-canopy-highlight", "true");
+      span.setAttribute("data-color", color);
+      span.className = "canopy-highlight";
+
+      const fragment = range.extractContents();
+      span.appendChild(fragment);
+      range.insertNode(span);
+      range.detach();
+
+      container.normalize();
+      return true;
+    } catch {
+      // If wrapping fails (e.g., invalid range), try next block.
+      continue;
+    }
+  }
+
+  return false;
+}
+
+function getTextNodes(root: HTMLElement): Text[] {
+  const nodes: Text[] = [];
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+    acceptNode(node) {
+      if (!(node instanceof Text)) return NodeFilter.FILTER_REJECT;
+      if (!node.nodeValue) return NodeFilter.FILTER_REJECT;
+
+      const parent = node.parentElement;
+      if (!parent) return NodeFilter.FILTER_REJECT;
+
+      if (parent.closest('span[data-canopy-highlight="true"]')) {
+        return NodeFilter.FILTER_REJECT;
+      }
+
+      const tag = parent.tagName.toLowerCase();
+      if (tag === "script" || tag === "style" || tag === "noscript") {
+        return NodeFilter.FILTER_REJECT;
+      }
+
+      return NodeFilter.FILTER_ACCEPT;
+    },
+  });
+
+  let n: Node | null;
+  // eslint-disable-next-line no-cond-assign
+  while ((n = walker.nextNode())) {
+    nodes.push(n as Text);
+  }
+
+  return nodes;
+}
+
+function locateTextOffset(
+  nodes: Text[],
+  absoluteOffset: number,
+): { node: Text; offset: number } | null {
+  let remaining = absoluteOffset;
+  for (const node of nodes) {
+    const len = node.nodeValue?.length ?? 0;
+    if (remaining <= len) {
+      return { node, offset: remaining };
+    }
+    remaining -= len;
+  }
+  return null;
 }
