@@ -72,6 +72,7 @@ export function useAppShell() {
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
+  const isPhone = useMediaQuery("(max-width: 767px)");
 
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null,
@@ -193,7 +194,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </Sheet>
 
           <Sheet open={rightPanelOpen} onOpenChange={setRightPanelOpen}>
-            <SheetContent side="right" title="Details" className="p-0">
+            <SheetContent
+              side={isPhone ? "bottom" : "right"}
+              title="Details"
+              className={isPhone ? "p-0 h-[85vh]" : "p-0"}
+            >
               <RightPanel />
             </SheetContent>
           </Sheet>
