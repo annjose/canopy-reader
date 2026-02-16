@@ -36,6 +36,13 @@ export default function ReadPage() {
   const progressDebounceRef = useRef<number | null>(null);
   const lastSavedProgressRef = useRef<number>(0);
   const [tocOpen, setTocOpen] = useState(false);
+  const [fontSizePx, setFontSizePx] = useState(18);
+
+  const FONT_SIZE_KEY = "canopy.reader.fontSizePx";
+  const FONT_SIZE_MIN = 14;
+  const FONT_SIZE_MAX = 24;
+  const FONT_SIZE_STEP = 1;
+  const FONT_SIZE_DEFAULT = 18;
 
   useEffect(() => {
     if (doc) {
@@ -47,6 +54,19 @@ export default function ReadPage() {
       setRightPanelOpen(false);
     };
   }, [doc, isDesktop, setSelectedDocument, setRightPanelOpen]);
+
+  useEffect(() => {
+    const raw = window.localStorage.getItem(FONT_SIZE_KEY);
+    if (!raw) return;
+    const parsed = Number(raw);
+    if (!Number.isFinite(parsed)) return;
+    const clamped = Math.min(Math.max(parsed, FONT_SIZE_MIN), FONT_SIZE_MAX);
+    setFontSizePx(clamped);
+  }, []);
+
+  useEffect(() => {
+    window.localStorage.setItem(FONT_SIZE_KEY, String(fontSizePx));
+  }, [fontSizePx]);
 
   const computeProgress = useCallback((el: HTMLElement) => {
     const maxScroll = Math.max(el.scrollHeight - el.clientHeight, 0);
@@ -257,6 +277,18 @@ export default function ReadPage() {
     window.open(doc.url, "_blank", "noopener,noreferrer");
   }
 
+  function decreaseFontSize() {
+    setFontSizePx((s) => Math.max(FONT_SIZE_MIN, s - FONT_SIZE_STEP));
+  }
+
+  function increaseFontSize() {
+    setFontSizePx((s) => Math.min(FONT_SIZE_MAX, s + FONT_SIZE_STEP));
+  }
+
+  function resetFontSize() {
+    setFontSizePx(FONT_SIZE_DEFAULT);
+  }
+
   function openTagEditor() {
     if (!doc) return;
     setSelectedDocument(doc);
@@ -308,6 +340,10 @@ export default function ReadPage() {
         tocOpen={tocOpen}
         onTocOpenChange={setTocOpen}
         onMutate={() => mutate()}
+        fontSizePx={fontSizePx}
+        onDecreaseFontSize={decreaseFontSize}
+        onIncreaseFontSize={increaseFontSize}
+        onResetFontSize={resetFontSize}
       />
 
       <header className="mx-auto max-w-[680px] px-6 pt-8">
@@ -332,7 +368,7 @@ export default function ReadPage() {
         </div>
       </header>
 
-      <ReaderView ref={readerRef} id={id} />
+      <ReaderView ref={readerRef} id={id} fontSizePx={fontSizePx} />
     </>
   );
 }

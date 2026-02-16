@@ -14,6 +14,10 @@ type Props = {
   tocOpen: boolean;
   onTocOpenChange: (open: boolean) => void;
   onMutate: () => void;
+  fontSizePx: number;
+  onDecreaseFontSize: () => void;
+  onIncreaseFontSize: () => void;
+  onResetFontSize: () => void;
 };
 
 export function ReaderToolbar({
@@ -22,6 +26,10 @@ export function ReaderToolbar({
   tocOpen,
   onTocOpenChange,
   onMutate,
+  fontSizePx,
+  onDecreaseFontSize,
+  onIncreaseFontSize,
+  onResetFontSize,
 }: Props) {
   const { isDesktop, rightPanelOpen, setRightPanelOpen } = useAppShell();
   async function toggleFavorite() {
@@ -104,6 +112,33 @@ export function ReaderToolbar({
           onOpenChange={onTocOpenChange}
         />
       )}
+
+      <div className="ml-1 mr-1 hidden sm:flex items-center rounded border border-gray-200 bg-white">
+        <button
+          onClick={onDecreaseFontSize}
+          className="px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100"
+          title="Decrease font size"
+          aria-label="Decrease font size"
+        >
+          A-
+        </button>
+        <button
+          onClick={onResetFontSize}
+          className="border-l border-r border-gray-200 px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100 min-w-10"
+          title="Reset font size"
+          aria-label="Reset font size"
+        >
+          {fontSizePx}
+        </button>
+        <button
+          onClick={onIncreaseFontSize}
+          className="px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100"
+          title="Increase font size"
+          aria-label="Increase font size"
+        >
+          A+
+        </button>
+      </div>
 
       <button
         onClick={toggleFavorite}

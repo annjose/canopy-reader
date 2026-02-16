@@ -8,6 +8,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
 } from "react";
 import { useSWRConfig } from "swr";
 import { useDocumentContent } from "@/hooks/use-document";
@@ -30,8 +31,10 @@ export type ReaderViewHandle = {
 
 type ToolbarState = ToolbarMode | null;
 
-export const ReaderView = forwardRef<ReaderViewHandle, { id: string }>(
-  function ReaderView({ id }, ref) {
+export const ReaderView = forwardRef<
+  ReaderViewHandle,
+  { id: string; fontSizePx?: number }
+>(function ReaderView({ id, fontSizePx = 18 }, ref) {
     const { mutate } = useSWRConfig();
     const { content, isLoading, error } = useDocumentContent(id);
     const { highlights } = useNotebook(id);
@@ -328,6 +331,7 @@ export const ReaderView = forwardRef<ReaderViewHandle, { id: string }>(
         <article
           ref={articleRef}
           className="article-content mx-auto max-w-[680px] px-6 py-8"
+          style={{ "--reader-font-size": `${fontSizePx}px` } as CSSProperties}
           dangerouslySetInnerHTML={articleHtml}
         />
 
