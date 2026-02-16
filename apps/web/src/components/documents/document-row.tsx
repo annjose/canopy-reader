@@ -99,6 +99,23 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
               {doc.reading_time_minutes} min read
             </span>
           )}
+          {doc.tags && doc.tags.length > 0 && (
+            <>
+              {doc.tags.slice(0, 3).map((tag) => (
+                <span
+                  key={tag.id}
+                  className="rounded-full bg-gray-200 px-2 py-0.5 text-[11px] text-gray-600"
+                >
+                  {tag.name}
+                </span>
+              ))}
+              {doc.tags.length > 3 && (
+                <span className="text-[11px] text-gray-500">
+                  +{doc.tags.length - 3}
+                </span>
+              )}
+            </>
+          )}
           <span className="sm:hidden whitespace-nowrap">{dateStr}</span>
         </div>
       </Link>

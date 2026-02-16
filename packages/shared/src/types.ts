@@ -46,6 +46,9 @@ export interface Document {
 
   created_at: string;
   updated_at: string;
+
+  /** Optional tags included in list-oriented payloads */
+  tags?: Tag[];
 }
 
 /** Tag for organizing documents */

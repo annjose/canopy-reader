@@ -36,6 +36,7 @@ export function ShortcutsHelpModal() {
             <Shortcut k="l" d="Move to Later" />
             <Shortcut k="e" d="Move to Archive" />
             <Shortcut k="s" d="Toggle favorite" />
+            <Shortcut k="t" d="Edit tags" />
             <Shortcut k="#" d="Move to Trash" />
             <div className="mt-3" />
             <Shortcut k="g h" d="Go to Library" />
@@ -60,6 +61,7 @@ export function ShortcutsHelpModal() {
             <Shortcut k="p" d="Toggle right panel" />
             <Shortcut k="c" d="Toggle table of contents" />
             <Shortcut k="h" d="Highlight selected text" />
+            <Shortcut k="t" d="Edit tags" />
             <Shortcut k="?" d="Show this help" />
           </Section>
         </div>

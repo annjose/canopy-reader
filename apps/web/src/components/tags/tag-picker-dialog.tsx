@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { mutate as mutateCache } from "swr";
 import type { Tag } from "@canopy/shared";
 import {
   Command,
@@ -129,6 +130,14 @@ export function TagPickerDialog({
     try {
       setSaving(true);
       await setDocumentTags(documentId, selectedIds);
+
+      // Revalidate all document-list queries so row tag chips update immediately.
+      await mutateCache(
+        (key) =>
+          typeof key === "string" &&
+          (key === "/api/documents" || key.startsWith("/api/documents?")),
+      );
+
       toast({ title: "Updated tags" });
       onUpdated();
       onOpenChange(false);

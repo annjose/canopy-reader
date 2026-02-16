@@ -1,4 +1,4 @@
-import type { Document, DocumentStatus, DocumentType } from "@canopy/shared";
+import type { Document, DocumentStatus, DocumentType, Tag } from "@canopy/shared";
 import { nowISO } from "./utils";
 
 export async function insertDocument(
@@ -155,6 +155,35 @@ export async function listDocuments(
     documents.pop();
     const lastDoc = documents[documents.length - 1];
     nextCursor = String(lastDoc[sort as keyof Document]);
+  }
+
+  // Attach tags for list rows in a single query (avoids N+1 calls from the client).
+  if (documents.length > 0) {
+    const docIds = documents.map((d) => d.id);
+    const placeholders = docIds.map(() => "?").join(",");
+
+    const tagRows = await db
+      .prepare(
+        `SELECT dt.document_id, t.id, t.name, t.slug, t.color, t.created_at
+         FROM document_tags dt
+         INNER JOIN tags t ON t.id = dt.tag_id
+         WHERE dt.document_id IN (${placeholders})
+         ORDER BY t.name COLLATE NOCASE ASC`,
+      )
+      .bind(...docIds)
+      .all<{ document_id: string } & Tag>();
+
+    const tagsByDocument = new Map<string, Tag[]>();
+    for (const row of tagRows.results ?? []) {
+      const { document_id, ...tag } = row;
+      const current = tagsByDocument.get(document_id) ?? [];
+      current.push(tag);
+      tagsByDocument.set(document_id, current);
+    }
+
+    for (const doc of documents) {
+      doc.tags = tagsByDocument.get(doc.id) ?? [];
+    }
   }
 
   return { documents, nextCursor };

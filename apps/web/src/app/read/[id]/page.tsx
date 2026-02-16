@@ -29,6 +29,7 @@ export default function ReadPage() {
     shortcutsHelpOpen,
     setShortcutsHelpOpen,
     searchOpen,
+    requestTagPicker,
   } = useAppShell();
 
   const readerRef = useRef<ReaderViewHandle>(null);
@@ -121,6 +122,13 @@ export default function ReadPage() {
     window.open(doc.url, "_blank", "noopener,noreferrer");
   }
 
+  function openTagEditor() {
+    if (!doc) return;
+    setSelectedDocument(doc);
+    setRightPanelOpen(true);
+    requestTagPicker(doc.id);
+  }
+
   useKeyboardShortcuts({
     enabled: !saveDialogOpen && !shortcutsHelpOpen && !searchOpen,
     bindings: {
@@ -137,6 +145,7 @@ export default function ReadPage() {
       p: () => setRightPanelOpen(!rightPanelOpen),
       c: () => setTocOpen((o) => !o),
       h: () => readerRef.current?.highlightSelection(),
+      t: openTagEditor,
       "?": () => setShortcutsHelpOpen(true),
     },
   });

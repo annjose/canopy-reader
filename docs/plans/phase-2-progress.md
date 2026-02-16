@@ -59,7 +59,7 @@ This doc tracks implementation progress for Phase 2 against the plan:
 
 ### Milestone 9 — Tags management page
 - Status: Done
-- Notes: Added `/tags` page with tag counts, create, rename, delete, and merge actions. Added `Tags` sidebar entry. Extended tags API with optional counts (`GET /api/tags?include_counts=true`) and merge endpoint (`POST /api/tags/merge`).
+- Notes: Added `/tags` page with tag counts, create, rename, delete, and merge actions. Added `Tags` sidebar entry. Extended tags API with optional counts (`GET /api/tags?include_counts=true`) and merge endpoint (`POST /api/tags/merge`). Also surfaced document tags in library rows (next to domain/reading time), fixed immediate list refresh after tag updates from Notebook, and added keyboard shortcut `t` (Library + Reader) to open the tag editor for the current document.
 - PR/Commit:
 
 ### Milestone 10 — Markdown export

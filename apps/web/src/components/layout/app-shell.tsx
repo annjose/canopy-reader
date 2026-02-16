@@ -60,6 +60,8 @@ type AppShellContextValue = {
   setShortcutsHelpOpen: (open: boolean) => void;
   searchOpen: boolean;
   setSearchOpen: (open: boolean) => void;
+  tagPickerRequest: { documentId: string; seq: number } | null;
+  requestTagPicker: (documentId: string) => void;
 };
 
 const AppShellContext = createContext<AppShellContextValue | null>(null);
@@ -84,6 +86,10 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [searchOpen, setSearchOpen] = useState(false);
 
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
+  const [tagPickerRequest, setTagPickerRequest] = useState<{
+    documentId: string;
+    seq: number;
+  } | null>(null);
 
   function isEditableTarget(target: EventTarget | null): boolean {
     if (!target || !(target instanceof HTMLElement)) return false;
@@ -120,6 +126,13 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
+  function requestTagPicker(documentId: string) {
+    setTagPickerRequest((prev) => ({
+      documentId,
+      seq: (prev?.seq ?? 0) + 1,
+    }));
+  }
+
   return (
     <AppShellContext.Provider
       value={{
@@ -136,6 +149,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         setShortcutsHelpOpen,
         searchOpen,
         setSearchOpen,
+        tagPickerRequest,
+        requestTagPicker,
       }}
     >
       {isDesktop ? (

@@ -77,6 +77,7 @@ export function DocumentList() {
     shortcutsHelpOpen,
     setShortcutsHelpOpen,
     searchOpen,
+    requestTagPicker,
   } = useAppShell();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -168,6 +169,13 @@ export function DocumentList() {
     window.open(selectedDoc.url, "_blank", "noopener,noreferrer");
   }
 
+  function openTagEditor() {
+    if (!selectedDoc) return;
+    setSelectedDocument(selectedDoc);
+    setRightPanelOpen(true);
+    requestTagPicker(selectedDoc.id);
+  }
+
   function navigateToStatus(next: DocumentStatus) {
     const sp = new URLSearchParams(searchParams.toString());
     sp.set("status", next);
@@ -199,6 +207,7 @@ export function DocumentList() {
       o: openSelected,
       v: openOriginal,
       s: toggleFavorite,
+      t: openTagEditor,
       i: () => setStatus("inbox"),
       r: () => setStatus("reading"),
       l: () => setStatus("later"),

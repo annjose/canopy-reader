@@ -13,7 +13,8 @@ import { TagPickerDialog } from "@/components/tags/tag-picker-dialog";
 type TabKey = "info" | "notebook";
 
 export function RightPanel() {
-  const { selectedDocument: doc, setRightPanelOpen } = useAppShell();
+  const { selectedDocument: doc, setRightPanelOpen, tagPickerRequest } =
+    useAppShell();
   const [tab, setTab] = useState<TabKey>("info");
 
   const {
@@ -24,6 +25,12 @@ export function RightPanel() {
     error,
     mutate: mutateNotebook,
   } = useNotebook(tab === "notebook" ? doc?.id ?? null : null);
+
+  useEffect(() => {
+    if (!doc || !tagPickerRequest) return;
+    if (tagPickerRequest.documentId !== doc.id) return;
+    setTab("notebook");
+  }, [doc, tagPickerRequest]);
 
   const infoRows: [string, string | null | undefined][] = useMemo(() => {
     if (!doc) return [];
@@ -104,6 +111,9 @@ export function RightPanel() {
             note: h.note ?? "",
           }))}
           onMutate={mutateNotebook}
+          openTagDialogSignal={
+            tagPickerRequest?.documentId === doc.id ? tagPickerRequest.seq : 0
+          }
         />
       )}
     </aside>
@@ -189,6 +199,7 @@ function NotebookTab({
   note,
   highlights,
   onMutate,
+  openTagDialogSignal,
 }: {
   documentId: string;
   isLoading: boolean;
@@ -197,6 +208,7 @@ function NotebookTab({
   note: string;
   highlights: { id: string; text: string; color: string; note: string }[];
   onMutate: () => void;
+  openTagDialogSignal: number;
 }) {
   const [noteDraft, setNoteDraft] = useState(note);
   const [noteSaving, setNoteSaving] = useState(false);
@@ -205,6 +217,11 @@ function NotebookTab({
   useEffect(() => {
     setNoteDraft(note);
   }, [note]);
+
+  useEffect(() => {
+    if (!openTagDialogSignal) return;
+    setTagDialogOpen(true);
+  }, [openTagDialogSignal]);
 
   async function saveNote() {
     try {
