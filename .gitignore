@@ -1,0 +1,41 @@
+# dependencies
+node_modules/
+
+# next.js
+.next/
+out/
+
+# build
+dist/
+.vercel/
+
+# cloudflare
+.wrangler/
+.dev.vars
+
+# env
+.env
+.env.local
+.env.production
+
+# os
+.DS_Store
+Thumbs.db
+
+# editor
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# testing
+coverage/
