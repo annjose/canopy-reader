@@ -525,7 +525,7 @@ APP_URL  # https://canopy.annjose.com
 
 | Phase | Description | Status | Plan |
 |-------|-------------|--------|------|
-| 1 | Foundation & Core Reading (MVP) | **In Progress** | [`docs/plans/phase-1-foundation.md`](docs/plans/phase-1-foundation.md) |
+| 1 | Foundation & Core Reading (MVP) | **Mostly complete** | [`docs/plans/phase-1-foundation.md`](docs/plans/phase-1-foundation.md) |
 | 2 | Tags, Notes & Highlights | Not started | |
 | 3 | RSS Feeds | Not started | |
 | 4 | File Uploads (EPUB & PDF) | Not started | |
@@ -533,3 +533,5 @@ APP_URL  # https://canopy.annjose.com
 | 6 | Browser Extension | Not started | |
 | 7 | Obsidian Integration | Not started | |
 | 8 | Polish & Advanced Features | Not started | |
+
+**Phase 1 note**: the MVP is working end-to-end (save by URL → read → organize) with keyboard shortcuts, command palette search, mobile layout, and Cloudflare Access enforcement on API routes. Remaining Phase 1 items are optional polish (e.g., persisting reading progress, reader font size controls, prev/next navigation).

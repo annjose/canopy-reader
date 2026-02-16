@@ -321,31 +321,31 @@ canopy-reader/
 
 ## Deliverables Checklist
 
-- [ ] Next.js + Tailwind CSS v4 project initialized
-- [ ] Wrangler config with D1 + R2 bindings
-- [ ] Cloudflare Access protecting the domain
-- [ ] D1 migration: `documents` table created
-- [ ] API: POST /api/documents (save URL → parse → store)
-- [ ] API: GET /api/documents (list with filters)
-- [ ] API: GET /api/documents/[id] (single document)
-- [ ] API: PATCH /api/documents/[id] (update status, favorite)
-- [ ] API: DELETE /api/documents/[id] (soft delete)
-- [ ] API: GET /api/documents/[id]/content (R2 content)
-- [ ] Three-panel layout shell (responsive)
-- [ ] Sidebar navigation
-- [ ] Document list with status tabs
-- [ ] Document row component with metadata
-- [ ] Reader view with parsed content
-- [ ] Table of contents in reader
-- [ ] Reading progress tracking
+- [x] Next.js + Tailwind CSS v4 project initialized
+- [x] Wrangler config with D1 + R2 bindings
+- [x] Cloudflare Access protecting the domain
+- [x] D1 migration: `documents` table created
+- [x] API: POST /api/documents (save URL → parse → store)
+- [x] API: GET /api/documents (list with filters)
+- [x] API: GET /api/documents/[id] (single document)
+- [x] API: PATCH /api/documents/[id] (update status, favorite)
+- [x] API: DELETE /api/documents/[id] (soft delete)
+- [x] API: GET /api/documents/[id]/content (R2 content)
+- [x] Three-panel layout shell (responsive)
+- [x] Sidebar navigation
+- [x] Document list with status tabs
+- [x] Document row component with metadata
+- [x] Reader view with parsed content
+- [x] Table of contents in reader
+- [ ] Reading progress tracking (persist to D1)
 - [ ] Font size adjustment
-- [ ] Open original URL
+- [x] Open original URL
 - [ ] Prev/next document navigation
-- [ ] Right panel with Info tab (metadata)
-- [ ] Save article dialog (URL input)
-- [ ] Keyboard shortcuts (all list + reader shortcuts)
-- [ ] Shortcuts help modal
-- [ ] Search (command palette + API)
-- [ ] Mobile responsive layout
-- [ ] Deploy to Cloudflare Workers
+- [x] Right panel with Info tab (metadata)
+- [x] Save article dialog (URL input)
+- [x] Keyboard shortcuts (all list + reader shortcuts)
+- [x] Shortcuts help modal
+- [x] Search (command palette + API)
+- [x] Mobile responsive layout
+- [x] Deploy to Cloudflare Workers
 - [ ] Seed data for development
