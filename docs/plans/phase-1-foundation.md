@@ -1,6 +1,7 @@
 # Phase 1: Foundation & Core Reading (MVP)
 
 **Goal**: Save articles by URL, read them in a clean reader view, organize with statuses, navigate with keyboard shortcuts. Establish the full deployment pipeline on Cloudflare.
+**Status**: Complete
 
 **Spec reference**: [`docs/canopy-spec.md`](../canopy-spec.md) → Phase 1
 
@@ -33,7 +34,6 @@
 - Migration files live in `migrations/` at the repo root (see [`docs/repo-structure.md`](../../docs/repo-structure.md) for workflow)
 - First migration: `migrations/0001_create_documents.sql` — `documents` table with indexes
 - Apply migrations via `./scripts/migrate.sh --local` (dev) or `--remote` (prod)
-- Seed script with sample data for development: `scripts/seed.ts`
 
 ### 1.5 R2 Storage Utilities
 - Helper functions: `uploadToR2(key, data)`, `getFromR2(key)`, `deleteFromR2(key)`
@@ -200,13 +200,14 @@ Displayed when a document is selected in list view or open in reader.
 ### 4.3 Reader View Shortcuts
 | Key | Action |
 |-----|--------|
-| `j` / `↓` | Scroll down |
-| `k` / `↑` | Scroll up |
+| `j` | Next document |
+| `k` | Previous document |
+| `↓` | Scroll down |
+| `↑` | Scroll up |
 | `Escape` / `u` | Back to list |
-| `[` | Previous document |
-| `]` | Next document |
+| `[` | Toggle left panel |
+| `]` | Toggle right panel |
 | `c` | Toggle table of contents |
-| `p` | Toggle right panel |
 | `v` | Open original URL in new tab |
 | `e` | Archive current document |
 | `s` | Toggle favorite |
@@ -259,7 +260,6 @@ Displayed when a document is selected in list view or open in reader.
 - `pnpm dev` — Next.js dev server with hot reload (via Turborepo)
 - Local D1 with `./scripts/migrate.sh --local` for migrations
 - Local R2 with miniflare (bundled in wrangler)
-- Seed script: `pnpm seed` — populates DB with sample articles
 
 ### 7.2 Deployment
 - `pnpm deploy:web` — builds + deploys via wrangler
@@ -308,8 +308,7 @@ canopy-reader/
 ├── migrations/
 │   └── 0001_create_documents.sql
 ├── scripts/
-│   ├── migrate.sh
-│   └── seed.ts
+│   └── migrate.sh
 ├── docs/
 ├── pnpm-workspace.yaml
 ├── turbo.json
@@ -337,10 +336,10 @@ canopy-reader/
 - [x] Document row component with metadata
 - [x] Reader view with parsed content
 - [x] Table of contents in reader
-- [ ] Reading progress tracking (persist to D1)
-- [ ] Font size adjustment
+- [x] Reading progress tracking (persist to D1)
+- [x] Font size adjustment
 - [x] Open original URL
-- [ ] Prev/next document navigation
+- [x] Prev/next document navigation (including `j`/`k` in reader mode)
 - [x] Right panel with Info tab (metadata)
 - [x] Save article dialog (URL input)
 - [x] Keyboard shortcuts (all list + reader shortcuts)
@@ -348,4 +347,3 @@ canopy-reader/
 - [x] Search (command palette + API)
 - [x] Mobile responsive layout
 - [x] Deploy to Cloudflare Workers
-- [ ] Seed data for development

@@ -271,8 +271,9 @@ Two tabs:
 ### Reader View
 | Key | Action |
 |-----|--------|
-| `ArrowUp/Down` or `j/k` | Scroll |
-| `[` / `]` | Previous / next document |
+| `j` / `k` | Next / previous document |
+| `ArrowUp/Down` | Scroll |
+| `[` / `]` | Toggle left / right panel |
 | `c` | Toggle table of contents |
 | `p` | Toggle right panel |
 | `v` | Open original URL |
@@ -351,7 +352,6 @@ Two tabs:
 
 5. **Markdown export**
    - Export single document's notes + highlights
-   - Export all notes + highlights (bulk)
    - Template: frontmatter (title, author, url, tags, date) + highlights with notes
 
 6. **UI polish**
@@ -531,8 +531,8 @@ APP_URL  # https://canopy.annjose.com
 
 | Phase | Description | Status | Plan |
 |-------|-------------|--------|------|
-| 1 | Foundation & Core Reading (MVP) | **Mostly complete** | [`docs/plans/phase-1-foundation.md`](docs/plans/phase-1-foundation.md) |
-| 2 | Tags, Notes & Highlights | Not started | |
+| 1 | Foundation & Core Reading (MVP) | **Complete** | [`docs/plans/phase-1-foundation.md`](docs/plans/phase-1-foundation.md) |
+| 2 | Tags, Notes & Highlights | **Complete** | [`docs/plans/phase-2-tags-highlight.md`](docs/plans/phase-2-tags-highlight.md) |
 | 3 | RSS Feeds | Not started | |
 | 4 | File Uploads (EPUB & PDF) | Not started | |
 | 5 | Newsletter / Email Integration | Not started | |
@@ -540,4 +540,4 @@ APP_URL  # https://canopy.annjose.com
 | 7 | Obsidian Integration | Not started | |
 | 8 | Polish & Advanced Features | Not started | |
 
-**Phase 1 note**: the MVP is working end-to-end (save by URL → read → organize) with keyboard shortcuts, command palette search, mobile layout, and Cloudflare Access enforcement on API routes. Remaining Phase 1 items are optional polish (e.g., persisting reading progress, reader font size controls, prev/next navigation).
+**Phase 1 note**: the MVP is working end-to-end (save by URL → read → organize) with keyboard shortcuts, command palette search, mobile layout, Cloudflare Access enforcement on API routes, reading progress persistence, reader font size controls, and prev/next navigation.

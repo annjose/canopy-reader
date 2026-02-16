@@ -2,6 +2,8 @@
 
 **Goal**: Add a full annotation + organization system on top of Phase 1 (documents + reader), including tags, document notes, and text highlights.
 
+**Status**: Complete
+
 - Spec reference: [`docs/canopy-spec.md`](../canopy-spec.md) → Phase 2
 - Repo structure: [`docs/repo-structure.md`](../repo-structure.md)
 - Phase 2 progress tracker: [`docs/plans/phase-2-progress.md`](phase-2-progress.md)

@@ -2,6 +2,7 @@
 
 This doc tracks implementation progress for Phase 2 against the plan:
 - Plan: [`phase-2-tags-highlight.md`](phase-2-tags-highlight.md)
+- Overall status: **Complete**
 
 **Rule**: We implement milestone-by-milestone, test, then commit after each block.
 

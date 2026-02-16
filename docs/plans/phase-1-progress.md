@@ -1,6 +1,7 @@
 # Phase 1 — Implementation Progress
 
 Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foundation.md)
+- Overall status: **Complete**
 
 ## Project Setup
 
@@ -36,3 +37,9 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 - shadcn/ui foundation added (Tailwind tokens + primitives like Dialog/Command/Input/Button)
 - Toast notifications for common document actions (save, favorite, status change, trash)
 - Reader view now displays a document header (title + basic metadata)
+- Reader progress persistence + font size controls were completed during Phase 2 polish work
+- Reader prev/next document navigation via `j`/`k` in reader mode is implemented.
+
+### Phase 1 status
+
+- Phase 1 is complete.

@@ -70,8 +70,7 @@ canopy-reader/
 │   └── 0001_create_documents.sql
 │
 ├── scripts/
-│   ├── migrate.sh                  # Apply migrations via wrangler d1 execute
-│   └── seed.ts                     # Seed dev database with sample data
+│   └── migrate.sh                  # Apply migrations via wrangler d1 execute
 │
 ├── docs/
 │   ├── repo-structure.md           # This document
