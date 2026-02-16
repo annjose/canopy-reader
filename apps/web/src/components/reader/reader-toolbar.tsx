@@ -5,6 +5,7 @@ import type { Document } from "@canopy/shared";
 import { updateDocument, deleteDocument } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_LABELS } from "@canopy/shared";
+import { useAppShell } from "@/components/layout/app-shell";
 import { Toc } from "./toc";
 
 type Props = {
@@ -22,6 +23,7 @@ export function ReaderToolbar({
   onTocOpenChange,
   onMutate,
 }: Props) {
+  const { isDesktop, rightPanelOpen, setRightPanelOpen } = useAppShell();
   async function toggleFavorite() {
     try {
       await updateDocument(doc.id, { is_favorite: doc.is_favorite ? 0 : 1 });
@@ -84,6 +86,16 @@ export function ReaderToolbar({
       </Link>
 
       <div className="flex-1" />
+
+      {!isDesktop && (
+        <button
+          onClick={() => setRightPanelOpen(!rightPanelOpen)}
+          className="p-2 rounded hover:bg-gray-100 text-gray-500"
+          title="Info"
+        >
+          <InfoIcon />
+        </button>
+      )}
 
       {contentHtml && (
         <Toc
@@ -168,6 +180,25 @@ function ExternalIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 9v3.5a1.5 1.5 0 01-1.5 1.5h-7A1.5 1.5 0 012 12.5v-7A1.5 1.5 0 013.5 4H7" />
       <path d="M10 2h4v4M6 10L14 2" />
+    </svg>
+  );
+}
+
+function InfoIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="8" cy="8" r="6" />
+      <path d="M8 7v4" />
+      <path d="M8 5h.01" />
     </svg>
   );
 }

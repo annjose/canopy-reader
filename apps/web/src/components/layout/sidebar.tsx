@@ -18,7 +18,13 @@ const LIBRARY_ITEMS = [
   { label: "Emails", href: "/library?type=email", icon: EmailIcon },
 ];
 
-export function Sidebar() {
+export function Sidebar({
+  mode = "desktop",
+  onNavigate,
+}: {
+  mode?: "desktop" | "drawer";
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { sidebarCollapsed, setSidebarCollapsed, setSaveDialogOpen } =
@@ -35,7 +41,7 @@ export function Sidebar() {
     return currentUrl === href;
   }
 
-  if (sidebarCollapsed) {
+  if (mode === "desktop" && sidebarCollapsed) {
     return (
       <aside className="flex flex-col items-center border-r border-gray-200 bg-gray-50 py-3 gap-2">
         <button
@@ -46,7 +52,10 @@ export function Sidebar() {
           <MenuIcon />
         </button>
         <button
-          onClick={() => setSaveDialogOpen(true)}
+          onClick={() => {
+            setSaveDialogOpen(true);
+            onNavigate?.();
+          }}
           className="p-2 rounded hover:bg-gray-200 text-gray-500"
           title="Save URL"
         >
@@ -59,21 +68,30 @@ export function Sidebar() {
   return (
     <aside className="flex flex-col border-r border-gray-200 bg-gray-50 overflow-y-auto">
       <div className="flex items-center justify-between px-4 py-3">
-        <Link href="/library" className="text-lg font-semibold text-gray-900">
+        <Link
+          href="/library"
+          className="text-lg font-semibold text-gray-900"
+          onClick={() => onNavigate?.()}
+        >
           Canopy
         </Link>
-        <button
-          onClick={() => setSidebarCollapsed(true)}
-          className="p-1 rounded hover:bg-gray-200 text-gray-400"
-          title="Collapse sidebar"
-        >
-          <MenuIcon />
-        </button>
+        {mode === "desktop" && (
+          <button
+            onClick={() => setSidebarCollapsed(true)}
+            className="p-1 rounded hover:bg-gray-200 text-gray-400"
+            title="Collapse sidebar"
+          >
+            <MenuIcon />
+          </button>
+        )}
       </div>
 
       <div className="px-3 mb-3">
         <button
-          onClick={() => setSaveDialogOpen(true)}
+          onClick={() => {
+            setSaveDialogOpen(true);
+            onNavigate?.();
+          }}
           className="flex w-full items-center gap-2 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800"
         >
           <PlusIcon />
@@ -86,6 +104,7 @@ export function Sidebar() {
           <Link
             key={item.href}
             href={item.href}
+            onClick={() => onNavigate?.()}
             className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
               isActive(item.href)
                 ? "bg-gray-200 font-medium text-gray-900"
@@ -111,6 +130,7 @@ export function Sidebar() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  onClick={() => onNavigate?.()}
                   className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
                     isActive(item.href)
                       ? "bg-gray-200 font-medium text-gray-900"

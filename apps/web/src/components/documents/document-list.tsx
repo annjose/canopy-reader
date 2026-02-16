@@ -45,6 +45,7 @@ export function DocumentList() {
 
   const { documents, nextCursor, isLoading, mutate } = useDocuments(params);
   const {
+    isDesktop,
     setSelectedDocument,
     setRightPanelOpen,
     saveDialogOpen,
@@ -69,12 +70,12 @@ export function DocumentList() {
     setSelectedIndex((i) => Math.max(0, Math.min(i, documents.length - 1)));
   }, [documents.length, setSelectedDocument]);
 
-  // Drive the right panel from the current selection.
+  // Drive the right panel from the current selection (desktop only).
   useEffect(() => {
     if (!selectedDoc) return;
     setSelectedDocument(selectedDoc);
-    setRightPanelOpen(true);
-  }, [selectedDoc, setSelectedDocument, setRightPanelOpen]);
+    if (isDesktop) setRightPanelOpen(true);
+  }, [selectedDoc, isDesktop, setSelectedDocument, setRightPanelOpen]);
 
   async function toggleFavorite() {
     if (!selectedDoc) return;

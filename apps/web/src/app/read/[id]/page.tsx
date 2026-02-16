@@ -18,6 +18,7 @@ export default function ReadPage() {
   const { content } = useDocumentContent(id);
   const router = useRouter();
   const {
+    isDesktop,
     setSelectedDocument,
     setRightPanelOpen,
     rightPanelOpen,
@@ -32,13 +33,13 @@ export default function ReadPage() {
   useEffect(() => {
     if (doc) {
       setSelectedDocument(doc);
-      setRightPanelOpen(true);
+      if (isDesktop) setRightPanelOpen(true);
     }
     return () => {
       setSelectedDocument(null);
       setRightPanelOpen(false);
     };
-  }, [doc, setSelectedDocument, setRightPanelOpen]);
+  }, [doc, isDesktop, setSelectedDocument, setRightPanelOpen]);
 
   function scrollMainBy(deltaY: number) {
     const el = document.querySelector("main");

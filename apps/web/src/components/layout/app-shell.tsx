@@ -6,10 +6,48 @@ import { RightPanel } from "./right-panel";
 import { ShortcutsHelpModal } from "@/components/keyboard/shortcuts-help-modal";
 import { SearchPalette } from "@/components/search/search-palette";
 import { Toaster } from "@/components/ui/toaster";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import type { Document } from "@canopy/shared";
 
+function MenuIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
+      <path d="M2 4h12M2 8h12M2 12h12" />
+    </svg>
+  );
+}
+
+function SearchIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="7" cy="7" r="4.5" />
+      <path d="M10.5 10.5L14 14" />
+    </svg>
+  );
+}
+
 type AppShellContextValue = {
+  isDesktop: boolean;
   selectedDocument: Document | null;
   setSelectedDocument: (doc: Document | null) => void;
   rightPanelOpen: boolean;
@@ -33,6 +71,8 @@ export function useAppShell() {
 }
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  const isDesktop = useMediaQuery("(min-width: 1024px)");
+
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null,
   );
@@ -41,6 +81,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [shortcutsHelpOpen, setShortcutsHelpOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+
+  const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
 
   function isEditableTarget(target: EventTarget | null): boolean {
     if (!target || !(target instanceof HTMLElement)) return false;
@@ -80,6 +122,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   return (
     <AppShellContext.Provider
       value={{
+        isDesktop,
         selectedDocument,
         setSelectedDocument,
         rightPanelOpen,
@@ -94,16 +137,69 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         setSearchOpen,
       }}
     >
-      <div
-        className="grid h-screen"
-        style={{
-          gridTemplateColumns: `${sidebarCollapsed ? "56px" : "240px"} 1fr${rightPanelOpen ? " 320px" : ""}`,
-        }}
-      >
-        <Sidebar />
-        <main className="overflow-y-auto">{children}</main>
-        {rightPanelOpen && <RightPanel />}
-      </div>
+      {isDesktop ? (
+        <div
+          className="grid h-screen"
+          style={{
+            gridTemplateColumns: `${sidebarCollapsed ? "56px" : "240px"} 1fr${rightPanelOpen ? " 320px" : ""}`,
+          }}
+        >
+          <Sidebar mode="desktop" />
+          <main className="overflow-y-auto">{children}</main>
+          {rightPanelOpen && <RightPanel />}
+        </div>
+      ) : (
+        <div className="flex h-screen flex-col">
+          <header className="flex items-center gap-2 border-b border-border bg-background px-3 py-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => {
+                setSidebarCollapsed(false);
+                setMobileSidebarOpen(true);
+              }}
+              aria-label="Open menu"
+            >
+              <MenuIcon />
+            </Button>
+            <div className="flex-1 text-sm font-semibold text-foreground">
+              Canopy
+            </div>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search"
+            >
+              <SearchIcon />
+            </Button>
+            <Button
+              variant="default"
+              size="sm"
+              onClick={() => setSaveDialogOpen(true)}
+            >
+              Save
+            </Button>
+          </header>
+          <main className="flex-1 overflow-y-auto">{children}</main>
+
+          <Sheet open={mobileSidebarOpen} onOpenChange={setMobileSidebarOpen}>
+            <SheetContent side="left" title="Menu" className="p-0">
+              <Sidebar
+                mode="drawer"
+                onNavigate={() => setMobileSidebarOpen(false)}
+              />
+            </SheetContent>
+          </Sheet>
+
+          <Sheet open={rightPanelOpen} onOpenChange={setRightPanelOpen}>
+            <SheetContent side="right" title="Details" className="p-0">
+              <RightPanel />
+            </SheetContent>
+          </Sheet>
+        </div>
+      )}
+
       <ShortcutsHelpModal />
       <SearchPalette />
       <Toaster />
