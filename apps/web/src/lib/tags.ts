@@ -1,4 +1,4 @@
-import type { Tag } from "@canopy/shared";
+import type { Tag, TagWithCount } from "@canopy/shared";
 import { generateId, nowISO } from "./utils";
 
 export async function listTags(db: D1Database): Promise<Tag[]> {
@@ -6,6 +6,33 @@ export async function listTags(db: D1Database): Promise<Tag[]> {
     .prepare("SELECT * FROM tags ORDER BY name COLLATE NOCASE ASC")
     .all<Tag>();
   return result.results ?? [];
+}
+
+export async function listTagsWithCounts(
+  db: D1Database,
+): Promise<TagWithCount[]> {
+  const result = await db
+    .prepare(
+      `SELECT
+         t.id,
+         t.name,
+         t.slug,
+         t.color,
+         t.created_at,
+         COUNT(dt.document_id) AS document_count
+       FROM tags t
+       LEFT JOIN document_tags dt ON dt.tag_id = t.id
+       GROUP BY t.id, t.name, t.slug, t.color, t.created_at
+       ORDER BY t.name COLLATE NOCASE ASC`,
+    )
+    .all<
+      Omit<TagWithCount, "document_count"> & { document_count: number | string }
+    >();
+
+  return (result.results ?? []).map((row) => ({
+    ...row,
+    document_count: Number(row.document_count) || 0,
+  }));
 }
 
 export async function getTagById(
@@ -119,4 +146,28 @@ export async function replaceDocumentTags(
   }
 
   await db.batch(statements);
+}
+
+export async function mergeTagInto(
+  db: D1Database,
+  sourceTagId: string,
+  targetTagId: string,
+): Promise<void> {
+  // Move all existing document links to target tag.
+  await db
+    .prepare(
+      `INSERT OR IGNORE INTO document_tags (document_id, tag_id)
+       SELECT document_id, ?
+       FROM document_tags
+       WHERE tag_id = ?`,
+    )
+    .bind(targetTagId, sourceTagId)
+    .run();
+
+  // Clean up old links and delete the source tag.
+  await db
+    .prepare("DELETE FROM document_tags WHERE tag_id = ?")
+    .bind(sourceTagId)
+    .run();
+  await deleteTag(db, sourceTagId);
 }

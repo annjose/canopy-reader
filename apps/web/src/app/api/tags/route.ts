@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import { requireAccess } from "@/lib/access";
 import { slugify } from "@/lib/slug";
-import { createTag, getTagBySlug, listTags } from "@/lib/tags";
+import { createTag, getTagBySlug, listTags, listTagsWithCounts } from "@/lib/tags";
 
 export async function GET(request: NextRequest) {
   const auth = await requireAccess(request);
@@ -10,7 +10,13 @@ export async function GET(request: NextRequest) {
 
   try {
     const { env } = await getCloudflareContext({ async: true });
-    const tags = await listTags(env.DB);
+    const includeCounts =
+      request.nextUrl.searchParams.get("include_counts") === "true";
+
+    const tags = includeCounts
+      ? await listTagsWithCounts(env.DB)
+      : await listTags(env.DB);
+
     return NextResponse.json({ tags });
   } catch (error) {
     const message = error instanceof Error ? error.message : "Unknown error";

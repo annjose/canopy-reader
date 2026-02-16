@@ -7,6 +7,7 @@ import { useAppShell } from "./app-shell";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/library", icon: HomeIcon },
+  { label: "Tags", href: "/tags", icon: TagIcon },
   { label: "Favorites", href: "/library?is_favorite=true", icon: StarIcon },
   { label: "Trash", href: "/library?is_trashed=true", icon: TrashIcon },
 ];
@@ -179,6 +180,15 @@ function StarIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round">
       <path d="M8 2l1.8 3.6L14 6.2l-3 2.9.7 4.1L8 11.2l-3.7 2 .7-4.1-3-2.9 4.2-.6z" />
+    </svg>
+  );
+}
+
+function TagIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M2.5 6.5V2.5h4l7 7-4 4-7-7z" />
+      <circle cx="5.2" cy="5.2" r="0.9" fill="currentColor" stroke="none" />
     </svg>
   );
 }

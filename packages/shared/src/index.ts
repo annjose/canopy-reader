@@ -10,6 +10,7 @@ export type {
   HighlightColor,
   NotebookData,
   Tag,
+  TagWithCount,
 } from "./types";
 
 export {

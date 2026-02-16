@@ -5,6 +5,7 @@ import type {
   Highlight,
   HighlightColor,
   Tag,
+  TagWithCount,
 } from "@canopy/shared";
 
 const BASE = "/api/documents";
@@ -103,6 +104,35 @@ export function createHighlight(
 
 export function listTags() {
   return fetchJSON<{ tags: Tag[] }>("/api/tags");
+}
+
+export function listTagsWithCounts() {
+  return fetchJSON<{ tags: TagWithCount[] }>("/api/tags?include_counts=true");
+}
+
+export function updateTag(
+  id: string,
+  fields: { name?: string; color?: string | null },
+) {
+  return fetchJSON<Tag>(`/api/tags/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+}
+
+export function deleteTag(id: string) {
+  return fetchJSON<{ success: boolean }>(`/api/tags/${id}`, {
+    method: "DELETE",
+  });
+}
+
+export function mergeTags(sourceTagId: string, targetTagId: string) {
+  return fetchJSON<{ success: boolean; targetTagId: string }>("/api/tags/merge", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ sourceTagId, targetTagId }),
+  });
 }
 
 export async function createTag(

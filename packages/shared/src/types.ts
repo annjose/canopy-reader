@@ -59,6 +59,11 @@ export interface Tag {
   created_at: string;
 }
 
+/** Tag with computed number of linked documents */
+export interface TagWithCount extends Tag {
+  document_count: number;
+}
+
 /** Join table for document-tag relationship */
 export interface DocumentTag {
   document_id: string;
