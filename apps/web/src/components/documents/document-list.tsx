@@ -52,6 +52,7 @@ export function DocumentList() {
     (searchParams.get("sort") as "created_at" | "published_at" | "title") ??
     "created_at";
   const type = searchParams.get("type") ?? undefined;
+  const tag = searchParams.get("tag") ?? undefined;
   const isTrashed = searchParams.get("is_trashed") === "true";
   const isFavorite = searchParams.get("is_favorite") === "true";
 
@@ -59,9 +60,11 @@ export function DocumentList() {
     ? { is_trashed: true, sort }
     : isFavorite
       ? { is_favorite: true, sort }
-      : type
-        ? { type, sort }
-        : { status, sort };
+      : tag
+        ? { tag, sort }
+        : type
+          ? { type, sort }
+          : { status, sort };
 
   const { documents, nextCursor, isLoading, mutate } = useDocuments(params);
   const {
@@ -219,9 +222,11 @@ export function DocumentList() {
     ? "Trash"
     : isFavorite
       ? "Favorites"
-      : type
-        ? `${type.charAt(0).toUpperCase()}${type.slice(1)}s`
-        : null;
+      : tag
+        ? `Tag: ${tag}`
+        : type
+          ? `${type.charAt(0).toUpperCase()}${type.slice(1)}s`
+          : null;
 
   return (
     <div>

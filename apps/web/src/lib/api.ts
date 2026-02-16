@@ -82,6 +82,8 @@ export type ListDocumentsParams = {
   status?: DocumentStatus;
   type?: string;
   q?: string;
+  /** Tag slug filter */
+  tag?: string;
   sort?: "created_at" | "published_at" | "title";
   cursor?: string;
   limit?: number;
@@ -100,6 +102,7 @@ export function buildDocumentsUrl(params: ListDocumentsParams = {}): string {
   if (params.type) sp.set("type", params.type);
   if (params.q) sp.set("q", params.q);
   if (params.sort) sp.set("sort", params.sort);
+  if (params.tag) sp.set("tag", params.tag);
   if (params.cursor) sp.set("cursor", params.cursor);
   if (params.limit) sp.set("limit", String(params.limit));
   if (params.is_trashed) sp.set("is_trashed", "true");

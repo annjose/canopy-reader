@@ -43,8 +43,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 6 — UI: Tag picker + tag filter
-- Status: Not started
-- Notes:
+- Status: In progress
+- Notes: Library list supports `?tag=<slug>` filtering (client-side wiring). Tag picker/edit UI pending.
 - PR/Commit:
 
 ### Milestone 7 — Highlights capture (save + list)
