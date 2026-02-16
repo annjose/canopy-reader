@@ -10,13 +10,13 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 | 1.2  | Cloudflare deployment pipeline (opennextjs-cloudflare, wrangler deploy) | Done        |
 | 1.3  | Cloudflare Access auth                                                  | **Next**    |
 | 1.4  | Database migrations (0001_create_documents.sql, migrate.sh)             | Done        |
-| 1.5  | R2 storage utilities                                                    | Not started |
+| 1.5  | R2 storage utilities                                                    | Done        |
 
 ## Features
 
 | Step | Description                                                                                       | Status      |
 |------|---------------------------------------------------------------------------------------------------|-------------|
-| 2    | API layer — Document CRUD, article content extraction (Readability)                               | Not started |
+| 2    | API layer — Document CRUD, article content extraction (Readability)                               | Done        |
 | 3    | UI components — Three-panel layout, sidebar, document list, reader view, right panel, save dialog | Not started |
 | 4    | Keyboard shortcuts — Shortcut engine, all bindings, help modal                                    | Not started |
 | 5    | Search — Command palette + search API                                                             | Not started |

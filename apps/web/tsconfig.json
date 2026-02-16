@@ -16,9 +16,11 @@
     },
     "incremental": true,
     "noEmit": true,
-    "allowJs": true
+    "allowJs": true,
+    "types": ["@cloudflare/workers-types"]
   },
   "include": [
+    "env.d.ts",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
