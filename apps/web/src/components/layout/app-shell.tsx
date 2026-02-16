@@ -46,8 +46,45 @@ function SearchIcon() {
   );
 }
 
+function SunIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <circle cx="8" cy="8" r="3" />
+      <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    >
+      <path d="M12.5 10.2A5.5 5.5 0 016 2.5a5.5 5.5 0 107.7 7.7z" />
+    </svg>
+  );
+}
+
 type AppShellContextValue = {
   isDesktop: boolean;
+  theme: "light" | "dark";
+  toggleTheme: () => void;
   selectedDocument: Document | null;
   setSelectedDocument: (doc: Document | null) => void;
   rightPanelOpen: boolean;
@@ -76,6 +113,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const isDesktop = useMediaQuery("(min-width: 1024px)");
   const isPhone = useMediaQuery("(max-width: 767px)");
 
+  const [theme, setTheme] = useState<"light" | "dark">("light");
+
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null,
   );
@@ -90,6 +129,26 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     documentId: string;
     seq: number;
   } | null>(null);
+
+  useEffect(() => {
+    const stored = window.localStorage.getItem("canopy.theme");
+    if (stored === "light" || stored === "dark") {
+      setTheme(stored);
+      return;
+    }
+
+    const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+    setTheme(prefersDark ? "dark" : "light");
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", theme === "dark");
+    window.localStorage.setItem("canopy.theme", theme);
+  }, [theme]);
+
+  function toggleTheme() {
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
+  }
 
   function isEditableTarget(target: EventTarget | null): boolean {
     if (!target || !(target instanceof HTMLElement)) return false;
@@ -165,6 +224,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <AppShellContext.Provider
       value={{
         isDesktop,
+        theme,
+        toggleTheme,
         selectedDocument,
         setSelectedDocument,
         rightPanelOpen,
@@ -216,6 +277,15 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               aria-label="Search"
             >
               <SearchIcon />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={toggleTheme}
+              aria-label="Toggle theme"
+              title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+            >
+              {theme === "dark" ? <SunIcon /> : <MoonIcon />}
             </Button>
             <Button
               variant="default"

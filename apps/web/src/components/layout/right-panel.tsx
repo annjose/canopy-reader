@@ -55,7 +55,7 @@ export function RightPanel() {
 
   if (!doc) {
     return (
-      <aside className="border-l border-gray-200 bg-gray-50 p-4">
+      <aside className="border-l border-gray-200 bg-gray-50 p-4 dark:border-neutral-800 dark:bg-neutral-900">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-sm font-semibold text-gray-500">Details</h2>
           <button
@@ -71,7 +71,7 @@ export function RightPanel() {
   }
 
   return (
-    <aside className="border-l border-gray-200 bg-gray-50 p-4 overflow-y-auto">
+    <aside className="border-l border-gray-200 bg-gray-50 p-4 overflow-y-auto dark:border-neutral-800 dark:bg-neutral-900">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-sm font-semibold text-gray-900">Details</h2>
         <button
@@ -83,7 +83,7 @@ export function RightPanel() {
         </button>
       </div>
 
-      <div className="mb-4 flex items-center gap-2 rounded-lg bg-white p-1 border border-gray-200">
+      <div className="mb-4 flex items-center gap-2 rounded-lg bg-white p-1 border border-gray-200 dark:border-neutral-700 dark:bg-neutral-800">
         <TabButton active={tab === "info"} onClick={() => setTab("info")}>
           Info
         </TabButton>
@@ -135,8 +135,8 @@ function TabButton({
       onClick={onClick}
       className={`flex-1 rounded-md px-3 py-1.5 text-sm ${
         active
-          ? "bg-gray-900 text-white"
-          : "text-gray-600 hover:bg-gray-100"
+          ? "bg-gray-900 text-white dark:bg-neutral-700 dark:text-neutral-100"
+          : "text-gray-600 hover:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
       }`}
     >
       {children}
@@ -295,8 +295,8 @@ function NotebookTab({
           disabled={exporting}
           className={`rounded px-2 py-1 text-xs font-medium ${
             exporting
-              ? "bg-gray-100 text-gray-400"
-              : "bg-gray-900 text-white hover:bg-gray-800"
+              ? "bg-gray-100 text-gray-400 dark:bg-neutral-800 dark:text-neutral-500"
+              : "bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
           }`}
         >
           {exporting ? "Exporting…" : "Export markdown"}
@@ -311,7 +311,7 @@ function NotebookTab({
           <button
             type="button"
             onClick={() => setTagDialogOpen(true)}
-            className="rounded px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200"
+            className="rounded px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
           >
             Edit
           </button>
@@ -324,7 +324,7 @@ function NotebookTab({
             tags.map((t) => (
               <span
                 key={t.id}
-                className="rounded-full bg-gray-200 px-2.5 py-1 text-xs text-gray-700"
+                className="rounded-full bg-gray-200 px-2.5 py-1 text-xs text-gray-700 dark:bg-neutral-700 dark:text-neutral-200"
                 title={t.slug}
               >
                 {t.name}
@@ -353,8 +353,8 @@ function NotebookTab({
             disabled={!noteDirty || noteSaving}
             className={`rounded px-2 py-1 text-xs font-medium ${
               !noteDirty || noteSaving
-                ? "bg-gray-100 text-gray-400"
-                : "bg-gray-900 text-white hover:bg-gray-800"
+                ? "bg-gray-100 text-gray-400 dark:bg-neutral-800 dark:text-neutral-500"
+                : "bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
             }`}
             title={noteDirty ? "Save note" : "No changes"}
           >
@@ -366,7 +366,7 @@ function NotebookTab({
           value={noteDraft}
           onChange={(e) => setNoteDraft(e.target.value)}
           placeholder="Write a note (markdown)…"
-          className="mt-2 w-full min-h-[120px] resize-y rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300"
+          className="mt-2 w-full min-h-[120px] resize-y rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:focus:ring-neutral-600"
         />
       </section>
 
@@ -505,7 +505,7 @@ function HighlightCard({
 
   return (
     <div
-      className={`rounded-lg border border-gray-200 border-l-[3px] ${HL_BORDER_COLORS[highlight.color] ?? "border-l-yellow-400"} bg-white p-3 cursor-pointer`}
+      className={`rounded-lg border border-gray-200 border-l-[3px] ${HL_BORDER_COLORS[highlight.color] ?? "border-l-yellow-400"} bg-white p-3 cursor-pointer dark:border-neutral-700 dark:bg-neutral-800`}
       onClick={scrollToHighlight}
     >
       <div className="flex items-start justify-between gap-2">
@@ -565,7 +565,7 @@ function HighlightCard({
             value={noteDraft}
             onChange={(e) => setNoteDraft(e.target.value)}
             placeholder="Add a note..."
-            className="w-full min-h-[56px] resize-y rounded-md border border-gray-200 bg-white p-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300"
+            className="w-full min-h-[56px] resize-y rounded-md border border-gray-200 bg-white p-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:focus:ring-neutral-600"
           />
           {dirty && (
             <div className="mt-1 flex justify-end">
@@ -573,7 +573,7 @@ function HighlightCard({
                 type="button"
                 onClick={() => void save()}
                 disabled={saving}
-                className="rounded px-2 py-1 text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50"
+                className="rounded px-2 py-1 text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600 disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save"}
               </button>

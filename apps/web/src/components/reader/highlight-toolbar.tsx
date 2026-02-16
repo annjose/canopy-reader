@@ -59,13 +59,13 @@ export function HighlightToolbar({
       }}
       onMouseDown={(e) => e.preventDefault()}
     >
-      <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1.5 shadow-lg">
+      <div className="flex items-center gap-1 rounded-lg border border-gray-200 bg-white px-2 py-1.5 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
         {isEdit ? (
           <button
             type="button"
             onClick={onDelete}
             disabled={saving}
-            className="flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 disabled:opacity-50"
+            className="flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/40 disabled:opacity-50"
             title="Remove highlight"
           >
             <XSmallIcon />
@@ -76,7 +76,7 @@ export function HighlightToolbar({
             type="button"
             onClick={() => onHighlight("yellow", null)}
             disabled={saving}
-            className="flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+            className="flex items-center gap-1 rounded px-2 py-1 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:text-neutral-200 dark:hover:bg-neutral-700 disabled:opacity-50"
             title="Highlight with default color"
           >
             <PencilIcon />
@@ -100,7 +100,7 @@ export function HighlightToolbar({
             }}
             className={`h-5 w-5 rounded-full border-2 transition-transform hover:scale-110 disabled:opacity-50 ${
               isEdit && state.color === c
-                ? "border-gray-800 scale-110"
+                ? "border-gray-800 dark:border-neutral-100 scale-110"
                 : "border-transparent"
             }`}
             title={c}
@@ -116,8 +116,10 @@ export function HighlightToolbar({
         <button
           type="button"
           onClick={() => setNoteOpen((o) => !o)}
-          className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium hover:bg-gray-100 ${
-            noteOpen ? "text-gray-900 bg-gray-100" : "text-gray-500"
+          className={`flex items-center gap-1 rounded px-2 py-1 text-xs font-medium hover:bg-gray-100 dark:hover:bg-neutral-700 ${
+            noteOpen
+              ? "text-gray-900 bg-gray-100 dark:text-neutral-100 dark:bg-neutral-700"
+              : "text-gray-500 dark:text-neutral-300"
           }`}
           title="Add a note"
         >
@@ -127,12 +129,12 @@ export function HighlightToolbar({
       </div>
 
       {noteOpen && (
-        <div className="mt-1 w-64 rounded-lg border border-gray-200 bg-white p-2 shadow-lg">
+        <div className="mt-1 w-64 rounded-lg border border-gray-200 bg-white p-2 shadow-lg dark:border-neutral-700 dark:bg-neutral-800">
           <textarea
             value={noteDraft}
             onChange={(e) => setNoteDraft(e.target.value)}
             placeholder="Add a note..."
-            className="w-full resize-none rounded border border-gray-200 px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-gray-300"
+            className="w-full resize-none rounded border border-gray-200 px-2 py-1.5 text-sm outline-none focus:ring-2 focus:ring-gray-300 dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100 dark:focus:ring-neutral-600"
             rows={2}
             autoFocus
           />
@@ -147,7 +149,7 @@ export function HighlightToolbar({
                   onHighlight("yellow", noteDraft.trim() || null);
                 }
               }}
-              className="rounded px-3 py-1 text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 disabled:opacity-50"
+              className="rounded px-3 py-1 text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600 disabled:opacity-50"
             >
               {saving ? "Saving..." : "Save"}
             </button>

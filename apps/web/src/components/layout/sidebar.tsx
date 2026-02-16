@@ -28,8 +28,13 @@ export function Sidebar({
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
-  const { sidebarCollapsed, setSidebarCollapsed, setSaveDialogOpen } =
-    useAppShell();
+  const {
+    sidebarCollapsed,
+    setSidebarCollapsed,
+    setSaveDialogOpen,
+    theme,
+    toggleTheme,
+  } = useAppShell();
   const [libraryOpen, setLibraryOpen] = useState(true);
 
   const currentUrl =
@@ -44,7 +49,7 @@ export function Sidebar({
 
   if (mode === "desktop" && sidebarCollapsed) {
     return (
-      <aside className="flex flex-col items-center border-r border-gray-200 bg-gray-50 py-3 gap-2">
+      <aside className="flex flex-col items-center border-r border-gray-200 bg-gray-50 py-3 gap-2 dark:border-neutral-800 dark:bg-neutral-900">
         <button
           onClick={() => setSidebarCollapsed(false)}
           className="p-2 rounded hover:bg-gray-200 text-gray-500"
@@ -57,21 +62,28 @@ export function Sidebar({
             setSaveDialogOpen(true);
             onNavigate?.();
           }}
-          className="p-2 rounded hover:bg-gray-200 text-gray-500"
+          className="p-2 rounded hover:bg-gray-200 text-gray-500 dark:hover:bg-neutral-700 dark:text-neutral-300"
           title="Save URL"
         >
           <PlusIcon />
+        </button>
+        <button
+          onClick={toggleTheme}
+          className="p-2 rounded hover:bg-gray-200 text-gray-500 dark:hover:bg-neutral-700 dark:text-neutral-300"
+          title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        >
+          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
         </button>
       </aside>
     );
   }
 
   return (
-    <aside className="flex flex-col border-r border-gray-200 bg-gray-50 overflow-y-auto">
+    <aside className="flex flex-col border-r border-gray-200 bg-gray-50 overflow-y-auto dark:border-neutral-800 dark:bg-neutral-900">
       <div className="flex items-center justify-between px-4 py-3">
         <Link
           href="/library"
-          className="text-lg font-semibold text-gray-900"
+          className="text-lg font-semibold text-gray-900 dark:text-neutral-100"
           onClick={() => onNavigate?.()}
         >
           Canopy
@@ -79,7 +91,7 @@ export function Sidebar({
         {mode === "desktop" && (
           <button
             onClick={() => setSidebarCollapsed(true)}
-            className="p-1 rounded hover:bg-gray-200 text-gray-400"
+            className="p-1 rounded hover:bg-gray-200 text-gray-400 dark:hover:bg-neutral-700 dark:text-neutral-300"
             title="Collapse sidebar"
           >
             <MenuIcon />
@@ -93,7 +105,7 @@ export function Sidebar({
             setSaveDialogOpen(true);
             onNavigate?.();
           }}
-          className="flex w-full items-center gap-2 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800"
+          className="flex w-full items-center gap-2 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
         >
           <PlusIcon />
           Save
@@ -146,6 +158,16 @@ export function Sidebar({
           )}
         </div>
       </nav>
+
+      <div className="border-t border-gray-200 p-2 dark:border-neutral-800">
+        <button
+          onClick={toggleTheme}
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-gray-100"
+        >
+          {theme === "dark" ? <SunIcon /> : <MoonIcon />}
+          {theme === "dark" ? "Light mode" : "Dark mode"}
+        </button>
+      </div>
     </aside>
   );
 }
@@ -232,6 +254,23 @@ function EmailIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <rect x="1.5" y="3" width="13" height="10" rx="1.5" />
       <path d="M1.5 4.5L8 9l6.5-4.5" />
+    </svg>
+  );
+}
+
+function SunIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="3" />
+      <path d="M8 1.5v2M8 12.5v2M1.5 8h2M12.5 8h2M3 3l1.4 1.4M11.6 11.6L13 13M3 13l1.4-1.4M11.6 4.4L13 3" />
+    </svg>
+  );
+}
+
+function MoonIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M12.5 10.2A5.5 5.5 0 016 2.5a5.5 5.5 0 107.7 7.7z" />
     </svg>
   );
 }

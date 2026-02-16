@@ -68,11 +68,12 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 11 — UI polish (reading progress, panels, font size, dark mode)
-- Status: In progress
+- Status: Done
 - Notes: 
  - 11.1 done (reader restores last known position and writes debounced `reading_progress` + `last_read_position` updates to D1 with flush on leave). 
  - 11.2 done (global panel shortcuts `[`/`]`, `Ctrl/⌘ + /` for shortcuts help, and `n` to open Save URL dialog; fixed `]` key detection using bracket key codes).
  - 11.3 done (reader font size controls in toolbar with A-/A+/reset, applied via CSS variable, persisted in localStorage with min/max clamp).
+ - 11.4 done (dark mode theme toggle added in sidebar/mobile header; theme persisted via localStorage; `.dark` class applied at document root; dark token overrides and reader typography styles added).
 - PR/Commit:
 
 ---

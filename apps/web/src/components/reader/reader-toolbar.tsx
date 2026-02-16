@@ -84,7 +84,7 @@ export function ReaderToolbar({
   }
 
   return (
-    <div className="sticky top-0 z-30 flex items-center gap-2 border-b border-gray-200 bg-white/95 backdrop-blur px-4 py-2">
+    <div className="sticky top-0 z-30 flex items-center gap-2 border-b border-gray-200 bg-white/95 backdrop-blur px-4 py-2 dark:border-neutral-800 dark:bg-neutral-950/90">
       <Link
         href="/library"
         className="flex items-center gap-1 rounded px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100"

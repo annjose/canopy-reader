@@ -70,8 +70,8 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
 
   return (
     <div
-      className={`group flex items-start gap-3 px-4 py-3 border-b border-gray-100 cursor-default ${
-        selected ? "bg-gray-100" : "hover:bg-gray-50"
+      className={`group flex items-start gap-3 px-4 py-3 border-b border-gray-100 dark:border-neutral-800 cursor-default ${
+        selected ? "bg-gray-100 dark:bg-neutral-800" : "hover:bg-gray-50 dark:hover:bg-neutral-900"
       }`}
       onClick={onSelect}
     >
