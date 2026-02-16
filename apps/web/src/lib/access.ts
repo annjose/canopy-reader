@@ -16,6 +16,11 @@ export type AccessUser = {
   payload: JWTPayload;
 };
 
+const ALLOWED_EMAILS = new Set([
+  "ann.jose@gmail.com",
+  "georgeck@gmail.com",
+]);
+
 function isLocalhost(hostname: string): boolean {
   return hostname === "localhost" || hostname === "127.0.0.1" || hostname === "::1";
 }
@@ -56,7 +61,7 @@ export async function requireAccess(
 
     if (!email) return unauthorized();
 
-    if (email.toLowerCase() !== "ann.jose@gmail.com") {
+    if (!ALLOWED_EMAILS.has(email.toLowerCase())) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
