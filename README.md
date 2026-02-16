@@ -115,7 +115,7 @@ Migrations are numbered SQL files in `migrations/`.
 
 ## Specs / docs
 
-- Product spec: `canopy-spec.md`
+- Product spec: `docs/canopy-spec.md`
 - Repo structure: `docs/repo-structure.md`
 - Phase 1 plan: `docs/plans/phase-1-foundation.md`
 - Phase 1 progress: `docs/plans/phase-1-progress.md`

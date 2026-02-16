@@ -79,7 +79,7 @@ canopy-reader/
 │   └── plans/
 │       └── phase-1-foundation.md
 │
-├── canopy-spec.md
+├── docs/canopy-spec.md
 ├── pnpm-workspace.yaml
 ├── turbo.json
 ├── package.json                    # Root: workspace scripts, devDependencies

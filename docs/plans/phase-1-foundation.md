@@ -2,7 +2,7 @@
 
 **Goal**: Save articles by URL, read them in a clean reader view, organize with statuses, navigate with keyboard shortcuts. Establish the full deployment pipeline on Cloudflare.
 
-**Spec reference**: [canopy-spec.md](../../canopy-spec.md) → Phase 1
+**Spec reference**: [`docs/canopy-spec.md`](../canopy-spec.md) → Phase 1
 
 ---
 

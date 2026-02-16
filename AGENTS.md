@@ -4,7 +4,7 @@
 
 Canopy is a self-hosted read-it-later and knowledge management app (like Readwise Reader). Single-user, deployed on Cloudflare.
 
-- **Spec**: `canopy-spec.md` — full product specification
+- **Spec**: `docs/canopy-spec.md` — full product specification
 - **Repo structure**: `docs/repo-structure.md` — monorepo layout, tooling, migration workflow
 - **Phase 1 plan**: `docs/plans/phase-1-foundation.md` — detailed implementation plan for MVP
 - **Phase 1 progress**: `docs/plans/phase-1-progress.md` — current implementation status
