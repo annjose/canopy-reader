@@ -12,10 +12,10 @@ MIGRATIONS_DIR="$REPO_ROOT/migrations"
 WEB_DIR="$REPO_ROOT/apps/web"
 
 if [[ "${1:-}" == "--remote" ]]; then
-  LOCAL_FLAG=""
+  LOCATION_FLAG="--remote"
   echo "Applying migrations to REMOTE D1 database..."
 elif [[ "${1:-}" == "--local" ]]; then
-  LOCAL_FLAG="--local"
+  LOCATION_FLAG="--local"
   echo "Applying migrations to LOCAL D1 database..."
 else
   echo "Usage: $0 --local | --remote"
@@ -25,7 +25,7 @@ fi
 for migration in "$MIGRATIONS_DIR"/*.sql; do
   filename=$(basename "$migration")
   echo "  Applying: $filename"
-  npx wrangler d1 execute "$DB_NAME" $LOCAL_FLAG --file="$migration" --config="$WEB_DIR/wrangler.toml"
+  npx wrangler d1 execute "$DB_NAME" $LOCATION_FLAG --file="$migration" --config="$WEB_DIR/wrangler.toml"
 done
 
 echo "Done."
