@@ -227,6 +227,38 @@ export async function updateDocument(
     .run();
 }
 
+export async function getAdjacentDocumentIds(
+  db: D1Database,
+  id: string,
+): Promise<{ prev: string | null; next: string | null }> {
+  const doc = await db
+    .prepare("SELECT created_at FROM documents WHERE id = ?")
+    .bind(id)
+    .first<{ created_at: string }>();
+
+  if (!doc) return { prev: null, next: null };
+
+  // List is sorted by created_at DESC, so:
+  // prev (above in list) = newer document
+  // next (below in list) = older document
+  const [prev, next] = await Promise.all([
+    db
+      .prepare(
+        "SELECT id FROM documents WHERE is_trashed = 0 AND created_at > ? ORDER BY created_at ASC LIMIT 1",
+      )
+      .bind(doc.created_at)
+      .first<{ id: string }>(),
+    db
+      .prepare(
+        "SELECT id FROM documents WHERE is_trashed = 0 AND created_at < ? ORDER BY created_at DESC LIMIT 1",
+      )
+      .bind(doc.created_at)
+      .first<{ id: string }>(),
+  ]);
+
+  return { prev: prev?.id ?? null, next: next?.id ?? null };
+}
+
 export async function trashDocument(
   db: D1Database,
   id: string,

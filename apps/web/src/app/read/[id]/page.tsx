@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useDocument, useDocumentContent } from "@/hooks/use-document";
+import { useDocument, useDocumentContent, useAdjacentDocuments } from "@/hooks/use-document";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useAppShell } from "@/components/layout/app-shell";
 import { ReaderToolbar } from "@/components/reader/reader-toolbar";
@@ -19,6 +19,7 @@ export default function ReadPage() {
   const { id } = useParams<{ id: string }>();
   const { document: doc, isLoading, mutate } = useDocument(id);
   const { content } = useDocumentContent(id);
+  const { prevId, nextId } = useAdjacentDocuments(id);
   const router = useRouter();
   const {
     isDesktop,
@@ -296,11 +297,19 @@ export default function ReadPage() {
     requestTagPicker(doc.id);
   }
 
+  function goToNext() {
+    if (nextId) router.replace(`/read/${nextId}`);
+  }
+
+  function goToPrev() {
+    if (prevId) router.replace(`/read/${prevId}`);
+  }
+
   useKeyboardShortcuts({
     enabled: !saveDialogOpen && !shortcutsHelpOpen && !searchOpen,
     bindings: {
-      j: () => scrollMainBy(80),
-      k: () => scrollMainBy(-80),
+      j: goToNext,
+      k: goToPrev,
       arrowdown: () => scrollMainBy(120),
       arrowup: () => scrollMainBy(-120),
       escape: backToList,
@@ -344,6 +353,8 @@ export default function ReadPage() {
         onDecreaseFontSize={decreaseFontSize}
         onIncreaseFontSize={increaseFontSize}
         onResetFontSize={resetFontSize}
+        prevId={prevId}
+        nextId={nextId}
       />
 
       <header className="mx-auto max-w-[680px] px-6 pt-8">

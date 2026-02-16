@@ -18,6 +18,8 @@ type Props = {
   onDecreaseFontSize: () => void;
   onIncreaseFontSize: () => void;
   onResetFontSize: () => void;
+  prevId: string | null;
+  nextId: string | null;
 };
 
 export function ReaderToolbar({
@@ -30,6 +32,8 @@ export function ReaderToolbar({
   onDecreaseFontSize,
   onIncreaseFontSize,
   onResetFontSize,
+  prevId,
+  nextId,
 }: Props) {
   const { isDesktop, rightPanelOpen, setRightPanelOpen } = useAppShell();
   async function toggleFavorite() {
@@ -92,6 +96,37 @@ export function ReaderToolbar({
         <ArrowLeftIcon />
         Library
       </Link>
+
+      <div className="flex items-center">
+        {prevId ? (
+          <Link
+            href={`/read/${prevId}`}
+            replace
+            className="p-2 rounded hover:bg-accent text-muted-foreground"
+            title="Previous document (k)"
+          >
+            <ChevronUpIcon />
+          </Link>
+        ) : (
+          <span className="p-2 text-muted-foreground/30">
+            <ChevronUpIcon />
+          </span>
+        )}
+        {nextId ? (
+          <Link
+            href={`/read/${nextId}`}
+            replace
+            className="p-2 rounded hover:bg-accent text-muted-foreground"
+            title="Next document (j)"
+          >
+            <ChevronDownIcon />
+          </Link>
+        ) : (
+          <span className="p-2 text-muted-foreground/30">
+            <ChevronDownIcon />
+          </span>
+        )}
+      </div>
 
       <div className="flex-1" />
 
@@ -215,6 +250,22 @@ function ExternalIcon() {
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12 9v3.5a1.5 1.5 0 01-1.5 1.5h-7A1.5 1.5 0 012 12.5v-7A1.5 1.5 0 013.5 4H7" />
       <path d="M10 2h4v4M6 10L14 2" />
+    </svg>
+  );
+}
+
+function ChevronUpIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 10l4-4 4 4" />
+    </svg>
+  );
+}
+
+function ChevronDownIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M4 6l4 4 4-4" />
     </svg>
   );
 }

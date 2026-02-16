@@ -30,3 +30,19 @@ export function useDocumentContent(id: string | null) {
 
   return { content: data?.content ?? null, error, isLoading };
 }
+
+async function fetchAdjacent(
+  url: string,
+): Promise<{ prev: string | null; next: string | null }> {
+  const res = await fetch(url);
+  return res.json();
+}
+
+export function useAdjacentDocuments(id: string | null) {
+  const { data } = useSWR(
+    id ? `/api/documents/${id}/adjacent` : null,
+    fetchAdjacent,
+  );
+
+  return { prevId: data?.prev ?? null, nextId: data?.next ?? null };
+}
