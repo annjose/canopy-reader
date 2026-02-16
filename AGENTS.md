@@ -60,6 +60,7 @@ pnpm typecheck        # Type-check all packages
 - Cloudflare account to use: ann.jose@gmail.com (not georgeck@gmail.com)
 - **Do not create commits without explicit user approval.** You may stage changes and propose a commit message, but you must ask before running `git commit`.
 - **Commit messages must briefly explain what changed and why.** Include a short subject line plus 2–5 bullet points in the body when useful.
+- **Radix Dialog requirement:** any component built on Radix `Dialog` (including shadcn `Dialog`, `Sheet`, `CommandDialog`) must include a `DialogTitle` (can be `sr-only`) inside the content to avoid accessibility runtime errors.
 
 ## Conventions
 
