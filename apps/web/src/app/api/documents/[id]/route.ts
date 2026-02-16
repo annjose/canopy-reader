@@ -1,11 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { requireAccess } from "@/lib/access";
 import { getDocument, updateDocument, trashDocument } from "@/lib/db";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAccess(request);
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { id } = await params;
     const { env } = await getCloudflareContext({ async: true });
@@ -26,6 +30,9 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAccess(request);
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { id } = await params;
     const { env } = await getCloudflareContext({ async: true });
@@ -47,9 +54,12 @@ export async function PATCH(
 }
 
 export async function DELETE(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAccess(request);
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { id } = await params;
     const { env } = await getCloudflareContext({ async: true });

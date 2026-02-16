@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
+import { requireAccess } from "@/lib/access";
 import { getDocument } from "@/lib/db";
 import { getFromR2 } from "@/lib/r2";
 
 export async function GET(
-  _request: NextRequest,
+  request: NextRequest,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const auth = await requireAccess(request);
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { id } = await params;
     const { env } = await getCloudflareContext({ async: true });

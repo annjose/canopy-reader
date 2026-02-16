@@ -1,12 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getCloudflareContext } from "@opennextjs/cloudflare";
 import type { Document, DocumentStatus, DocumentType } from "@canopy/shared";
+import { requireAccess } from "@/lib/access";
 import { parseArticle } from "@/lib/parser";
 import { generateId, nowISO } from "@/lib/utils";
 import { contentKey, thumbnailKey, uploadToR2 } from "@/lib/r2";
 import { insertDocument, listDocuments } from "@/lib/db";
 
 export async function POST(request: NextRequest) {
+  const auth = await requireAccess(request);
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { url } = (await request.json()) as { url: string };
     if (!url) {
@@ -73,6 +77,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const auth = await requireAccess(request);
+  if (auth instanceof NextResponse) return auth;
+
   try {
     const { env } = await getCloudflareContext({ async: true });
     const params = request.nextUrl.searchParams;
