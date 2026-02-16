@@ -17,7 +17,7 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 | Step | Description                                                                                       | Status      |
 |------|---------------------------------------------------------------------------------------------------|-------------|
 | 2    | API layer — Document CRUD, article content extraction (Readability)                               | Done        |
-| 3    | UI components — Three-panel layout, sidebar, document list, reader view, right panel, save dialog | Not started |
+| 3    | UI components — Three-panel layout, sidebar, document list, reader view, right panel, save dialog | Done        |
 | 4    | Keyboard shortcuts — Shortcut engine, all bindings, help modal                                    | Not started |
 | 5    | Search — Command palette + search API                                                             | Not started |
 | 6    | Mobile responsive — Breakpoints, collapsible panels                                               | Not started |
