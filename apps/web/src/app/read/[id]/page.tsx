@@ -319,13 +319,13 @@ export default function ReadPage() {
 
   if (isLoading) {
     return (
-      <div className="py-20 text-center text-sm text-gray-400">Loading...</div>
+      <div className="py-20 text-center text-sm text-muted-foreground">Loading...</div>
     );
   }
 
   if (!doc) {
     return (
-      <div className="py-20 text-center text-sm text-gray-400">
+      <div className="py-20 text-center text-sm text-muted-foreground">
         Document not found.
       </div>
     );

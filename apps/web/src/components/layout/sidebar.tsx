@@ -49,10 +49,10 @@ export function Sidebar({
 
   if (mode === "desktop" && sidebarCollapsed) {
     return (
-      <aside className="flex flex-col items-center border-r border-gray-200 bg-gray-50 py-3 gap-2 dark:border-neutral-800 dark:bg-neutral-900">
+      <aside className="flex flex-col items-center border-r bg-muted py-3 gap-2">
         <button
           onClick={() => setSidebarCollapsed(false)}
-          className="p-2 rounded hover:bg-gray-200 text-gray-500"
+          className="p-2 rounded hover:bg-accent text-muted-foreground"
           title="Expand sidebar"
         >
           <MenuIcon />
@@ -62,14 +62,14 @@ export function Sidebar({
             setSaveDialogOpen(true);
             onNavigate?.();
           }}
-          className="p-2 rounded hover:bg-gray-200 text-gray-500 dark:hover:bg-neutral-700 dark:text-neutral-300"
+          className="p-2 rounded hover:bg-accent text-muted-foreground"
           title="Save URL"
         >
           <PlusIcon />
         </button>
         <button
           onClick={toggleTheme}
-          className="p-2 rounded hover:bg-gray-200 text-gray-500 dark:hover:bg-neutral-700 dark:text-neutral-300"
+          className="p-2 rounded hover:bg-accent text-muted-foreground"
           title={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
         >
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
@@ -79,11 +79,11 @@ export function Sidebar({
   }
 
   return (
-    <aside className="flex flex-col border-r border-gray-200 bg-gray-50 overflow-y-auto dark:border-neutral-800 dark:bg-neutral-900">
+    <aside className="flex flex-col border-r bg-muted overflow-y-auto">
       <div className="flex items-center justify-between px-4 py-3">
         <Link
           href="/library"
-          className="text-lg font-semibold text-gray-900 dark:text-neutral-100"
+          className="text-lg font-semibold text-foreground"
           onClick={() => onNavigate?.()}
         >
           Canopy
@@ -91,7 +91,7 @@ export function Sidebar({
         {mode === "desktop" && (
           <button
             onClick={() => setSidebarCollapsed(true)}
-            className="p-1 rounded hover:bg-gray-200 text-gray-400 dark:hover:bg-neutral-700 dark:text-neutral-300"
+            className="p-1 rounded hover:bg-accent text-muted-foreground"
             title="Collapse sidebar"
           >
             <MenuIcon />
@@ -105,7 +105,7 @@ export function Sidebar({
             setSaveDialogOpen(true);
             onNavigate?.();
           }}
-          className="flex w-full items-center gap-2 rounded-lg bg-gray-900 px-3 py-2 text-sm font-medium text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
+          className="flex w-full items-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
         >
           <PlusIcon />
           Save
@@ -120,8 +120,8 @@ export function Sidebar({
             onClick={() => onNavigate?.()}
             className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
               isActive(item.href)
-                ? "bg-gray-200 font-medium text-gray-900"
-                : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                ? "bg-accent font-medium text-foreground"
+                : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
             }`}
           >
             <item.icon />
@@ -132,7 +132,7 @@ export function Sidebar({
         <div className="pt-3">
           <button
             onClick={() => setLibraryOpen(!libraryOpen)}
-            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-gray-400 hover:text-gray-600"
+            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground"
           >
             <ChevronIcon open={libraryOpen} />
             Library
@@ -146,8 +146,8 @@ export function Sidebar({
                   onClick={() => onNavigate?.()}
                   className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
                     isActive(item.href)
-                      ? "bg-gray-200 font-medium text-gray-900"
-                      : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                      ? "bg-accent font-medium text-foreground"
+                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
                   }`}
                 >
                   <item.icon />
@@ -159,10 +159,10 @@ export function Sidebar({
         </div>
       </nav>
 
-      <div className="border-t border-gray-200 p-2 dark:border-neutral-800">
+      <div className="border-t p-2">
         <button
           onClick={toggleTheme}
-          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-neutral-300 dark:hover:bg-neutral-800 dark:hover:text-gray-100"
+          className="flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-sm text-muted-foreground hover:bg-accent hover:text-foreground"
         >
           {theme === "dark" ? <SunIcon /> : <MoonIcon />}
           {theme === "dark" ? "Light mode" : "Dark mode"}

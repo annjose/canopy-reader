@@ -84,10 +84,10 @@ export function ReaderToolbar({
   }
 
   return (
-    <div className="sticky top-0 z-30 flex items-center gap-2 border-b border-gray-200 bg-white/95 backdrop-blur px-4 py-2 dark:border-neutral-800 dark:bg-neutral-950/90">
+    <div className="sticky top-0 z-30 flex items-center gap-2 border-b bg-background/95 backdrop-blur px-4 py-2">
       <Link
         href="/library"
-        className="flex items-center gap-1 rounded px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100"
+        className="flex items-center gap-1 rounded px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent"
       >
         <ArrowLeftIcon />
         Library
@@ -98,7 +98,7 @@ export function ReaderToolbar({
       {!isDesktop && (
         <button
           onClick={() => setRightPanelOpen(!rightPanelOpen)}
-          className="p-2 rounded hover:bg-gray-100 text-gray-500"
+          className="p-2 rounded hover:bg-accent text-muted-foreground"
           title="Info"
         >
           <InfoIcon />
@@ -113,10 +113,10 @@ export function ReaderToolbar({
         />
       )}
 
-      <div className="ml-1 mr-1 hidden sm:flex items-center rounded border border-gray-200 bg-white">
+      <div className="ml-1 mr-1 hidden sm:flex items-center rounded border bg-background">
         <button
           onClick={onDecreaseFontSize}
-          className="px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100"
+          className="px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent"
           title="Decrease font size"
           aria-label="Decrease font size"
         >
@@ -124,7 +124,7 @@ export function ReaderToolbar({
         </button>
         <button
           onClick={onResetFontSize}
-          className="border-l border-r border-gray-200 px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100 min-w-10"
+          className="border-l border-r px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent min-w-10"
           title="Reset font size"
           aria-label="Reset font size"
         >
@@ -132,7 +132,7 @@ export function ReaderToolbar({
         </button>
         <button
           onClick={onIncreaseFontSize}
-          className="px-2 py-1.5 text-xs text-gray-600 hover:bg-gray-100"
+          className="px-2 py-1.5 text-xs text-muted-foreground hover:bg-accent"
           title="Increase font size"
           aria-label="Increase font size"
         >
@@ -142,21 +142,21 @@ export function ReaderToolbar({
 
       <button
         onClick={toggleFavorite}
-        className={`p-2 rounded hover:bg-gray-100 ${doc.is_favorite ? "text-yellow-500" : "text-gray-400"}`}
+        className={`p-2 rounded hover:bg-accent ${doc.is_favorite ? "text-yellow-500" : "text-muted-foreground"}`}
         title="Favorite"
       >
         <StarIcon filled={!!doc.is_favorite} />
       </button>
       <button
         onClick={archive}
-        className="p-2 rounded hover:bg-gray-100 text-gray-400"
+        className="p-2 rounded hover:bg-accent text-muted-foreground"
         title="Archive"
       >
         <ArchiveIcon />
       </button>
       <button
         onClick={trash}
-        className="p-2 rounded hover:bg-gray-100 text-gray-400"
+        className="p-2 rounded hover:bg-accent text-muted-foreground"
         title="Trash"
       >
         <TrashIcon />
@@ -166,7 +166,7 @@ export function ReaderToolbar({
           href={doc.url}
           target="_blank"
           rel="noopener noreferrer"
-          className="p-2 rounded hover:bg-gray-100 text-gray-400"
+          className="p-2 rounded hover:bg-accent text-muted-foreground"
           title="Open original"
         >
           <ExternalIcon />

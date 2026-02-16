@@ -54,14 +54,14 @@ export function Toc({ contentHtml, open, onOpenChange }: Props) {
     <div className="relative">
       <button
         onClick={() => onOpenChange(!open)}
-        className="p-2 rounded hover:bg-gray-100 text-gray-500"
+        className="p-2 rounded hover:bg-accent text-muted-foreground"
         title="Table of contents"
       >
         <TocIcon />
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-1 w-72 max-h-80 overflow-y-auto rounded-lg border border-gray-200 bg-white shadow-lg p-2 z-50">
+        <div className="absolute right-0 top-full mt-1 w-72 max-h-80 overflow-y-auto rounded-lg border bg-popover shadow-lg p-2 z-50">
           {items.map((item) => (
             <button
               key={item.id}
@@ -70,7 +70,7 @@ export function Toc({ contentHtml, open, onOpenChange }: Props) {
                 el?.scrollIntoView({ behavior: "smooth" });
                 onOpenChange(false);
               }}
-              className="block w-full text-left rounded px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 truncate"
+              className="block w-full text-left rounded px-2 py-1.5 text-sm text-muted-foreground hover:bg-accent hover:text-foreground truncate"
               style={{ paddingLeft: `${(item.level - 1) * 12 + 8}px` }}
             >
               {item.text}

@@ -17,15 +17,15 @@ export function StatusTabs() {
   }
 
   return (
-    <div className="flex gap-1 border-b border-gray-200 px-4 overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="flex gap-1 border-b px-4 overflow-x-auto whitespace-nowrap [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
       {DOCUMENT_STATUSES.map((status) => (
         <button
           key={status}
           onClick={() => handleClick(status)}
           className={`px-3 py-2 text-sm font-medium border-b-2 transition-colors flex-shrink-0 ${
             currentStatus === status
-              ? "border-gray-900 text-gray-900"
-              : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+              ? "border-foreground text-foreground"
+              : "border-transparent text-muted-foreground hover:text-foreground hover:border-muted"
           }`}
         >
           {STATUS_LABELS[status]}

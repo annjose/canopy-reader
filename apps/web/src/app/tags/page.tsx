@@ -44,14 +44,14 @@ export default function TagsPage() {
   return (
     <div className="mx-auto max-w-4xl p-4 md:p-6">
       <div className="mb-5">
-        <h1 className="text-xl font-semibold text-gray-900">Tags</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-xl font-semibold text-foreground">Tags</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Manage tags, rename labels, merge duplicates, and clean up unused tags.
         </p>
       </div>
 
-      <div className="mb-6 rounded-lg border border-gray-200 bg-white p-4">
-        <h2 className="text-sm font-medium text-gray-700">Create tag</h2>
+      <div className="mb-6 rounded-lg border bg-card p-4">
+        <h2 className="text-sm font-medium text-foreground">Create tag</h2>
         <div className="mt-3 flex flex-col gap-2 sm:flex-row">
           <Input
             value={newTagName}
@@ -70,11 +70,11 @@ export default function TagsPage() {
         </div>
       </div>
 
-      {isLoading && <div className="text-sm text-gray-500">Loading tags…</div>}
-      {error && <div className="text-sm text-red-600">Failed to load tags.</div>}
+      {isLoading && <div className="text-sm text-muted-foreground">Loading tags…</div>}
+      {error && <div className="text-sm text-destructive">Failed to load tags.</div>}
 
       {!isLoading && !error && tags.length === 0 && (
-        <div className="rounded-lg border border-dashed border-gray-300 bg-gray-50 px-4 py-8 text-center text-sm text-gray-500">
+        <div className="rounded-lg bg-muted/50 px-4 py-8 text-center text-sm text-muted-foreground">
           No tags yet.
         </div>
       )}
@@ -180,14 +180,14 @@ function TagRow({
   }
 
   return (
-    <div className="rounded-lg border border-gray-200 bg-white p-4">
+    <div className="rounded-lg border bg-card p-4">
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:gap-4">
         <div className="min-w-0 flex-1">
           <div className="mb-2 flex items-center gap-2">
-            <span className="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">
+            <span className="rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground">
               {tag.document_count} docs
             </span>
-            <span className="text-xs text-gray-400">/{tag.slug}</span>
+            <span className="text-xs text-muted-foreground/60">/{tag.slug}</span>
           </div>
 
           <div className="flex gap-2">
@@ -214,7 +214,7 @@ function TagRow({
         <div className="flex flex-col gap-2 md:w-[280px]">
           <div className="flex gap-2">
             <select
-              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm"
+              className="h-9 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground"
               value={targetTagId}
               onChange={(e) => setTargetTagId(e.target.value)}
             >

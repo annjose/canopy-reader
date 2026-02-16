@@ -312,7 +312,7 @@ export const ReaderView = forwardRef<
 
     if (isLoading) {
       return (
-        <div className="py-20 text-center text-sm text-gray-400">
+        <div className="py-20 text-center text-sm text-muted-foreground">
           Loading content...
         </div>
       );
@@ -320,7 +320,7 @@ export const ReaderView = forwardRef<
 
     if (error || !content) {
       return (
-        <div className="py-20 text-center text-sm text-gray-400">
+        <div className="py-20 text-center text-sm text-muted-foreground">
           {error ? "Failed to load content." : "No content available."}
         </div>
       );

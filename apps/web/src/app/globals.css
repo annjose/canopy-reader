@@ -13,6 +13,9 @@
     --canopy-hl-red: rgba(239, 68, 68, 0.22);
     --canopy-hl-purple: rgba(168, 85, 247, 0.22);
 
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+
     --muted: 240 4.8% 95.9%;
     --muted-foreground: 240 3.8% 46.1%;
 
@@ -21,7 +24,7 @@
 
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
+    --ring: 240 5% 65%;
 
     --primary: 240 5.9% 10%;
     --primary-foreground: 0 0% 98%;
@@ -38,14 +41,48 @@
     --radius: 0.5rem;
   }
 
+  *,
+  ::after,
+  ::before {
+    border-color: hsl(var(--border));
+  }
+
   body {
     @apply bg-background text-foreground;
   }
 
-  /* Dark mode overrides — warm neutral palette */
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground) / 0.3);
+  }
+
+  /* Firefox scrollbar */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  /* Dark mode overrides — warm neutral palette inspired by Readwise */
   .dark {
     --background: 0 0% 7%;
     --foreground: 30 5% 90%;
+
+    --card: 0 0% 9%;
+    --card-foreground: 30 5% 90%;
 
     --muted: 0 0% 12%;
     --muted-foreground: 25 3% 55%;
@@ -55,15 +92,16 @@
 
     --border: 0 0% 16%;
     --input: 0 0% 16%;
-    --ring: 30 5% 80%;
+    --ring: 30 5% 40%;
 
-    --primary: 0 0% 20%;
-    --primary-foreground: 30 5% 90%;
+    /* Buttons with subtle warmth, higher contrast */
+    --primary: 25 8% 28%;
+    --primary-foreground: 30 5% 95%;
 
-    --secondary: 0 0% 14%;
+    --secondary: 25 6% 20%;
     --secondary-foreground: 30 5% 90%;
 
-    --accent: 0 0% 15%;
+    --accent: 25 7% 22%;
     --accent-foreground: 30 5% 90%;
 
     --destructive: 0 63% 41%;

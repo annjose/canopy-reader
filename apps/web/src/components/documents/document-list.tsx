@@ -243,7 +243,7 @@ export function DocumentList() {
     <div>
       <div className="flex items-center justify-between px-4 py-2">
         {heading && (
-          <h2 className="text-sm font-semibold text-gray-700">{heading}</h2>
+          <h2 className="text-sm font-semibold text-foreground">{heading}</h2>
         )}
         <div className="ml-auto flex items-center gap-1">
           {!isDesktop && (
@@ -261,7 +261,7 @@ export function DocumentList() {
           <select
             value={sort}
             onChange={(e) => handleSort(e.target.value)}
-            className="text-xs text-gray-500 bg-transparent border border-gray-200 rounded px-2 py-1"
+            className="text-xs text-muted-foreground bg-transparent border border-input rounded px-2 py-1"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.value} value={opt.value}>
@@ -273,13 +273,13 @@ export function DocumentList() {
       </div>
 
       {isLoading && (
-        <div className="px-4 py-12 text-center text-sm text-gray-400">
+        <div className="px-4 py-12 text-center text-sm text-muted-foreground">
           Loading...
         </div>
       )}
 
       {!isLoading && documents.length === 0 && (
-        <div className="px-4 py-12 text-center text-sm text-gray-400">
+        <div className="px-4 py-12 text-center text-sm text-muted-foreground">
           {isTrashed
             ? "Trash is empty."
             : isFavorite
@@ -306,7 +306,7 @@ export function DocumentList() {
               sp.set("cursor", nextCursor);
               router.push(`/library?${sp.toString()}`);
             }}
-            className="text-sm text-blue-600 hover:underline"
+            className="text-sm text-muted-foreground underline hover:text-foreground"
           >
             Load more
           </button>

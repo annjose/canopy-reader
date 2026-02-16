@@ -70,8 +70,8 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
 
   return (
     <div
-      className={`group flex items-start gap-3 px-4 py-3 border-b border-gray-100 dark:border-neutral-800 cursor-default ${
-        selected ? "bg-gray-100 dark:bg-neutral-800" : "hover:bg-gray-50 dark:hover:bg-neutral-900"
+      className={`group flex items-start gap-3 px-4 py-3 border-b cursor-default ${
+        selected ? "bg-muted" : "hover:bg-muted/50"
       }`}
       onClick={onSelect}
     >
@@ -84,15 +84,15 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
       )}
 
       <Link href={`/read/${doc.id}`} className="flex-1 min-w-0">
-        <h3 className="text-sm font-medium text-gray-900 truncate">
+        <h3 className="text-sm font-medium text-foreground truncate">
           {doc.title}
         </h3>
         {doc.description && (
-          <p className="mt-0.5 text-sm text-gray-500 line-clamp-2">
+          <p className="mt-0.5 text-sm text-muted-foreground line-clamp-2">
             {doc.description}
           </p>
         )}
-        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-gray-400">
+        <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
           {doc.domain && <span className="whitespace-nowrap">{doc.domain}</span>}
           {doc.reading_time_minutes && (
             <span className="whitespace-nowrap">
@@ -104,13 +104,13 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
               {doc.tags.slice(0, 3).map((tag) => (
                 <span
                   key={tag.id}
-                  className="rounded-full bg-gray-200 px-2 py-0.5 text-[11px] text-gray-600"
+                  className="rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground"
                 >
                   {tag.name}
                 </span>
               ))}
               {doc.tags.length > 3 && (
-                <span className="text-[11px] text-gray-500">
+                <span className="text-[11px]">
                   +{doc.tags.length - 3}
                 </span>
               )}
@@ -126,7 +126,7 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
             e.stopPropagation();
             void toggleFavorite();
           }}
-          className={`p-1.5 rounded hover:bg-gray-200 ${doc.is_favorite ? "text-yellow-500" : "text-gray-400"}`}
+          className={`p-1.5 rounded hover:bg-accent ${doc.is_favorite ? "text-yellow-500" : "text-muted-foreground"}`}
           title="Favorite"
         >
           <StarIcon filled={!!doc.is_favorite} />
@@ -136,7 +136,7 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
             e.stopPropagation();
             void archive();
           }}
-          className="p-1.5 rounded hover:bg-gray-200 text-gray-400"
+          className="p-1.5 rounded hover:bg-accent text-muted-foreground"
           title="Archive"
         >
           <ArchiveIcon />
@@ -146,14 +146,14 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
             e.stopPropagation();
             void trash();
           }}
-          className="p-1.5 rounded hover:bg-gray-200 text-gray-400"
+          className="p-1.5 rounded hover:bg-accent text-muted-foreground"
           title="Trash"
         >
           <TrashSmIcon />
         </button>
       </div>
 
-      <span className="hidden sm:block flex-shrink-0 text-xs text-gray-400 pt-0.5">
+      <span className="hidden sm:block flex-shrink-0 text-xs text-muted-foreground pt-0.5">
         {dateStr}
       </span>
     </div>

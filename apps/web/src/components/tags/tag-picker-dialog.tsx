@@ -195,8 +195,8 @@ export function TagPickerDialog({
                         <span
                           className={`mr-2 inline-flex h-4 w-4 items-center justify-center rounded border text-xs ${
                             selected
-                              ? "bg-gray-900 text-white border-gray-900"
-                              : "border-gray-300"
+                              ? "bg-primary text-primary-foreground border-primary"
+                              : "border-input"
                           }`}
                           aria-hidden
                         >

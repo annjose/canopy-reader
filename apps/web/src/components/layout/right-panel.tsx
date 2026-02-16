@@ -55,35 +55,35 @@ export function RightPanel() {
 
   if (!doc) {
     return (
-      <aside className="border-l border-gray-200 bg-gray-50 p-4 dark:border-neutral-800 dark:bg-neutral-900">
+      <aside className="border-l bg-muted p-4">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-semibold text-gray-500">Details</h2>
+          <h2 className="text-sm font-semibold text-muted-foreground">Details</h2>
           <button
             onClick={() => setRightPanelOpen(false)}
-            className="p-1 rounded hover:bg-gray-200 text-gray-400"
+            className="p-1 rounded hover:bg-accent text-muted-foreground"
           >
             <XIcon />
           </button>
         </div>
-        <p className="text-sm text-gray-400">Select a document to see details</p>
+        <p className="text-sm text-muted-foreground">Select a document to see details</p>
       </aside>
     );
   }
 
   return (
-    <aside className="border-l border-gray-200 bg-gray-50 p-4 overflow-y-auto dark:border-neutral-800 dark:bg-neutral-900">
+    <aside className="border-l bg-muted p-4 overflow-y-auto">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-gray-900">Details</h2>
+        <h2 className="text-sm font-semibold text-foreground">Details</h2>
         <button
           onClick={() => setRightPanelOpen(false)}
-          className="p-1 rounded hover:bg-gray-200 text-gray-400"
+          className="p-1 rounded hover:bg-accent text-muted-foreground"
           aria-label="Close details"
         >
           <XIcon />
         </button>
       </div>
 
-      <div className="mb-4 flex items-center gap-2 rounded-lg bg-white p-1 border border-gray-200 dark:border-neutral-700 dark:bg-neutral-800">
+      <div className="mb-4 flex items-center gap-2 rounded-lg bg-background p-1">
         <TabButton active={tab === "info"} onClick={() => setTab("info")}>
           Info
         </TabButton>
@@ -135,8 +135,8 @@ function TabButton({
       onClick={onClick}
       className={`flex-1 rounded-md px-3 py-1.5 text-sm ${
         active
-          ? "bg-gray-900 text-white dark:bg-neutral-700 dark:text-neutral-100"
-          : "text-gray-600 hover:bg-gray-100 dark:text-neutral-300 dark:hover:bg-neutral-800"
+          ? "bg-primary text-primary-foreground"
+          : "text-muted-foreground hover:bg-accent"
       }`}
     >
       {children}
@@ -168,10 +168,10 @@ function InfoTab({
           ([label, value]) =>
             value && (
               <div key={label}>
-                <dt className="text-xs font-medium text-gray-400 uppercase tracking-wide">
+                <dt className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
                   {label}
                 </dt>
-                <dd className="mt-0.5 text-sm text-gray-700">{value}</dd>
+                <dd className="mt-0.5 text-sm text-foreground">{value}</dd>
               </div>
             ),
         )}
@@ -182,7 +182,7 @@ function InfoTab({
           href={docUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-6 block text-sm text-blue-600 hover:underline"
+          className="mt-6 block text-sm text-muted-foreground underline hover:text-foreground"
         >
           Open original
         </a>
@@ -277,11 +277,11 @@ function NotebookTab({
   }
 
   if (isLoading) {
-    return <div className="text-sm text-gray-400">Loading notebook…</div>;
+    return <div className="text-sm text-muted-foreground">Loading notebook…</div>;
   }
 
   if (error) {
-    return <div className="text-sm text-gray-400">Failed to load notebook.</div>;
+    return <div className="text-sm text-muted-foreground">Failed to load notebook.</div>;
   }
 
   const noteDirty = noteDraft !== note;
@@ -295,8 +295,8 @@ function NotebookTab({
           disabled={exporting}
           className={`rounded px-2 py-1 text-xs font-medium ${
             exporting
-              ? "bg-gray-100 text-gray-400 dark:bg-neutral-800 dark:text-neutral-500"
-              : "bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
+              ? "bg-muted text-muted-foreground opacity-60"
+              : "bg-primary text-primary-foreground hover:bg-primary/90"
           }`}
         >
           {exporting ? "Exporting…" : "Export markdown"}
@@ -305,13 +305,13 @@ function NotebookTab({
 
       <section>
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Tags
           </h3>
           <button
             type="button"
             onClick={() => setTagDialogOpen(true)}
-            className="rounded px-2 py-1 text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-neutral-800 dark:text-neutral-300 dark:hover:bg-neutral-700"
+            className="rounded px-2 py-1 text-xs font-medium bg-muted text-muted-foreground hover:bg-accent"
           >
             Edit
           </button>
@@ -319,12 +319,12 @@ function NotebookTab({
 
         <div className="mt-2 flex flex-wrap gap-2">
           {tags.length === 0 ? (
-            <span className="text-sm text-gray-400">No tags</span>
+            <span className="text-sm text-muted-foreground">No tags</span>
           ) : (
             tags.map((t) => (
               <span
                 key={t.id}
-                className="rounded-full bg-gray-200 px-2.5 py-1 text-xs text-gray-700 dark:bg-neutral-700 dark:text-neutral-200"
+                className="rounded-full bg-muted px-2.5 py-1 text-xs text-muted-foreground"
                 title={t.slug}
               >
                 {t.name}
@@ -344,7 +344,7 @@ function NotebookTab({
 
       <section>
         <div className="flex items-center justify-between gap-2">
-          <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+          <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
             Note
           </h3>
           <button
@@ -353,8 +353,8 @@ function NotebookTab({
             disabled={!noteDirty || noteSaving}
             className={`rounded px-2 py-1 text-xs font-medium ${
               !noteDirty || noteSaving
-                ? "bg-gray-100 text-gray-400 dark:bg-neutral-800 dark:text-neutral-500"
-                : "bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600"
+                ? "bg-muted text-muted-foreground opacity-60"
+                : "bg-primary text-primary-foreground hover:bg-primary/90"
             }`}
             title={noteDirty ? "Save note" : "No changes"}
           >
@@ -366,17 +366,17 @@ function NotebookTab({
           value={noteDraft}
           onChange={(e) => setNoteDraft(e.target.value)}
           placeholder="Write a note (markdown)…"
-          className="mt-2 w-full min-h-[120px] resize-y rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:focus:ring-neutral-600"
+          className="mt-2 w-full min-h-[120px] resize-y rounded-lg bg-muted p-3 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
         />
       </section>
 
       <section>
-        <h3 className="text-xs font-semibold uppercase tracking-wide text-gray-500">
+        <h3 className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
           Highlights
         </h3>
         <div className="mt-2 space-y-3">
           {highlights.length === 0 ? (
-            <div className="text-sm text-gray-400">No highlights</div>
+            <div className="text-sm text-muted-foreground">No highlights</div>
           ) : (
             highlights.map((h) => (
               <HighlightCard
@@ -401,11 +401,11 @@ const HL_BORDER_COLORS: Record<string, string> = {
 };
 
 const HL_BG_COLORS: Record<string, string> = {
-  yellow: "bg-yellow-50",
-  blue: "bg-blue-50",
-  green: "bg-green-50",
-  red: "bg-red-50",
-  purple: "bg-purple-50",
+  yellow: "bg-[var(--canopy-hl-yellow)]",
+  blue: "bg-[var(--canopy-hl-blue)]",
+  green: "bg-[var(--canopy-hl-green)]",
+  red: "bg-[var(--canopy-hl-red)]",
+  purple: "bg-[var(--canopy-hl-purple)]",
 };
 
 const HL_DOT_COLORS: Record<string, string> = {
@@ -505,12 +505,12 @@ function HighlightCard({
 
   return (
     <div
-      className={`rounded-lg border border-gray-200 border-l-[3px] ${HL_BORDER_COLORS[highlight.color] ?? "border-l-yellow-400"} bg-white p-3 cursor-pointer dark:border-neutral-700 dark:bg-neutral-800`}
+      className={`rounded-lg border-l-[3px] ${HL_BORDER_COLORS[highlight.color] ?? "border-l-yellow-400"} bg-card p-3 cursor-pointer`}
       onClick={scrollToHighlight}
     >
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <div className={`rounded px-2 py-1.5 text-sm text-gray-800 italic ${HL_BG_COLORS[highlight.color] ?? "bg-yellow-50"}`}>
+          <div className={`rounded px-2 py-1.5 text-sm text-foreground italic ${HL_BG_COLORS[highlight.color] ?? "bg-yellow-50"}`}>
             &ldquo;{highlight.text}&rdquo;
           </div>
         </div>
@@ -540,7 +540,7 @@ function HighlightCard({
             e.stopPropagation();
             setNoteOpen((o) => !o);
           }}
-          className="text-xs text-gray-400 hover:text-gray-600"
+          className="text-xs text-muted-foreground hover:text-foreground"
           title="Toggle note"
         >
           {highlight.note ? "Edit note" : "Add note"}
@@ -552,7 +552,7 @@ function HighlightCard({
             void remove();
           }}
           disabled={deleting}
-          className="text-xs text-gray-400 hover:text-red-500 disabled:opacity-50"
+          className="text-xs text-muted-foreground hover:text-red-500 disabled:opacity-50"
           title="Delete highlight"
         >
           {deleting ? "..." : "Delete"}
@@ -565,7 +565,7 @@ function HighlightCard({
             value={noteDraft}
             onChange={(e) => setNoteDraft(e.target.value)}
             placeholder="Add a note..."
-            className="w-full min-h-[56px] resize-y rounded-md border border-gray-200 bg-white p-2 text-sm text-gray-800 outline-none focus:ring-2 focus:ring-gray-300 dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100 dark:focus:ring-neutral-600"
+            className="w-full min-h-[56px] resize-y rounded-md bg-muted p-2 text-sm text-foreground outline-none focus:ring-1 focus:ring-ring"
           />
           {dirty && (
             <div className="mt-1 flex justify-end">
@@ -573,7 +573,7 @@ function HighlightCard({
                 type="button"
                 onClick={() => void save()}
                 disabled={saving}
-                className="rounded px-2 py-1 text-xs font-medium bg-gray-900 text-white hover:bg-gray-800 dark:bg-neutral-700 dark:text-neutral-100 dark:hover:bg-neutral-600 disabled:opacity-50"
+                className="rounded px-2 py-1 text-xs font-medium bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
               >
                 {saving ? "Saving..." : "Save"}
               </button>
