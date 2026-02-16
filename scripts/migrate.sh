@@ -7,7 +7,9 @@
 set -euo pipefail
 
 DB_NAME="canopy-db"
-MIGRATIONS_DIR="$(cd "$(dirname "$0")/../migrations" && pwd)"
+REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+MIGRATIONS_DIR="$REPO_ROOT/migrations"
+WEB_DIR="$REPO_ROOT/apps/web"
 
 if [[ "${1:-}" == "--remote" ]]; then
   LOCAL_FLAG=""
@@ -23,7 +25,7 @@ fi
 for migration in "$MIGRATIONS_DIR"/*.sql; do
   filename=$(basename "$migration")
   echo "  Applying: $filename"
-  wrangler d1 execute "$DB_NAME" $LOCAL_FLAG --file="$migration"
+  npx wrangler d1 execute "$DB_NAME" $LOCAL_FLAG --file="$migration" --config="$WEB_DIR/wrangler.toml"
 done
 
 echo "Done."

@@ -1,10 +1,17 @@
 name = "canopy-web"
 compatibility_date = "2024-12-01"
+compatibility_flags = ["nodejs_compat"]
+main = ".open-next/worker.js"
+account_id = "0aaf034ea49235c64dd7a0e5bb7c4844"
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
 
 [[d1_databases]]
 binding = "DB"
 database_name = "canopy-db"
-database_id = "" # Set after creating D1 database
+database_id = "b0c9028e-0805-45c6-b076-3c8913e7300f"
 
 [[r2_buckets]]
 binding = "R2"

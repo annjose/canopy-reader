@@ -7,8 +7,8 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 | Step | Description                                                             | Status      |
 |------|-------------------------------------------------------------------------|-------------|
 | 1.1  | Initialize Next.js app (pnpm + Turborepo monorepo, Tailwind CSS v4)     | Done        |
-| 1.2  | Cloudflare deployment pipeline (opennextjs-cloudflare, wrangler deploy) | **Next**    |
-| 1.3  | Cloudflare Access auth                                                  | Not started |
+| 1.2  | Cloudflare deployment pipeline (opennextjs-cloudflare, wrangler deploy) | Done        |
+| 1.3  | Cloudflare Access auth                                                  | **Next**    |
 | 1.4  | Database migrations (0001_create_documents.sql, migrate.sh)             | Done        |
 | 1.5  | R2 storage utilities                                                    | Not started |
 
@@ -27,3 +27,5 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 - Dev server verified working at `http://localhost:3000`
 - `pnpm typecheck` and `pnpm build` both pass
 - Cloudflare account: use ann.jose@gmail.com (not georgeck@gmail.com)
+- D1 database ID: `b0c9028e-0805-45c6-b076-3c8913e7300f`
+- Deployed URL: `https://canopy-web.annjose.workers.dev`
