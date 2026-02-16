@@ -1,9 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { saveDocument } from "@/lib/api";
 import { useAppShell } from "@/components/layout/app-shell";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 
 export function SaveDialog() {
   const { saveDialogOpen, setSaveDialogOpen } = useAppShell();
@@ -11,22 +21,6 @@ export function SaveDialog() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-
-  useEffect(() => {
-    if (!saveDialogOpen) return;
-
-    function onKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        handleClose();
-      }
-    }
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [saveDialogOpen, loading]);
-
-  if (!saveDialogOpen) return null;
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -48,53 +42,64 @@ export function SaveDialog() {
   }
 
   function handleClose() {
-    if (!loading) {
-      setUrl("");
-      setError(null);
-      setSaveDialogOpen(false);
-    }
+    if (loading) return;
+    setUrl("");
+    setError(null);
+    setSaveDialogOpen(false);
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[20vh]">
-      <div className="fixed inset-0 bg-black/40" onClick={handleClose} />
-      <div className="relative z-10 w-full max-w-lg rounded-xl bg-white p-6 shadow-xl">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
-          Save a URL
-        </h2>
-        <form onSubmit={handleSave}>
-          <input
+    <Dialog
+      open={saveDialogOpen}
+      onOpenChange={(open) => {
+        if (!open) handleClose();
+        else setSaveDialogOpen(true);
+      }}
+    >
+      <DialogContent
+        className="sm:max-w-lg"
+        onEscapeKeyDown={(e) => {
+          if (loading) e.preventDefault();
+        }}
+        onPointerDownOutside={(e) => {
+          if (loading) e.preventDefault();
+        }}
+      >
+        <DialogHeader>
+          <DialogTitle>Save a URL</DialogTitle>
+          <DialogDescription>
+            Paste a link and Canopy will extract a readable version.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={handleSave} className="space-y-3">
+          <Input
             type="url"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
             placeholder="https://example.com/article"
-            className="w-full rounded-lg border border-gray-300 px-4 py-2.5 text-sm focus:border-gray-900 focus:outline-none focus:ring-1 focus:ring-gray-900"
             autoFocus
             disabled={loading}
             required
           />
-          {error && (
-            <p className="mt-2 text-sm text-red-600">{error}</p>
-          )}
-          <div className="mt-4 flex justify-end gap-2">
-            <button
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
+
+          <DialogFooter>
+            <Button
               type="button"
+              variant="secondary"
               onClick={handleClose}
-              className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-100"
               disabled={loading}
             >
               Cancel
-            </button>
-            <button
-              type="submit"
-              className="rounded-lg bg-gray-900 px-4 py-2 text-sm font-medium text-white hover:bg-gray-800 disabled:opacity-50"
-              disabled={loading || !url.trim()}
-            >
+            </Button>
+            <Button type="submit" disabled={loading || !url.trim()}>
               {loading ? "Saving..." : "Save"}
-            </button>
-          </div>
+            </Button>
+          </DialogFooter>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
