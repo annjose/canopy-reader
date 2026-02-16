@@ -67,6 +67,8 @@ export interface ListDocumentsFilters {
   status?: DocumentStatus;
   type?: DocumentType;
   q?: string;
+  /** Filter by tag slug (kebab-case) */
+  tag?: string;
   sort?: "created_at" | "published_at" | "title";
   cursor?: string;
   limit?: number;
@@ -108,6 +110,19 @@ export async function listDocuments(
     );
     const pattern = `%${filters.q}%`;
     params.push(pattern, pattern, pattern, pattern);
+  }
+
+  if (filters.tag) {
+    // Filter by tag slug.
+    conditions.push(
+      `id IN (
+        SELECT dt.document_id
+        FROM document_tags dt
+        INNER JOIN tags t ON t.id = dt.tag_id
+        WHERE t.slug = ?
+      )`,
+    );
+    params.push(filters.tag);
   }
 
   const sort = filters.sort ?? "created_at";

@@ -88,6 +88,7 @@ export async function GET(request: NextRequest) {
       status: (params.get("status") as DocumentStatus) || undefined,
       type: (params.get("type") as DocumentType) || undefined,
       q: params.get("q") || undefined,
+      tag: params.get("tag") || undefined,
       sort:
         (params.get("sort") as "created_at" | "published_at" | "title") ||
         undefined,
