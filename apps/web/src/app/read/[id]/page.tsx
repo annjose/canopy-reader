@@ -13,7 +13,7 @@ import { ProgressBar } from "@/components/reader/progress-bar";
 import { deleteDocument, updateDocument } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_LABELS } from "@canopy/shared";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function ReadPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,6 +33,8 @@ export default function ReadPage() {
   } = useAppShell();
 
   const readerRef = useRef<ReaderViewHandle>(null);
+  const progressDebounceRef = useRef<number | null>(null);
+  const lastSavedProgressRef = useRef<number>(0);
   const [tocOpen, setTocOpen] = useState(false);
 
   useEffect(() => {
@@ -45,6 +47,139 @@ export default function ReadPage() {
       setRightPanelOpen(false);
     };
   }, [doc, isDesktop, setSelectedDocument, setRightPanelOpen]);
+
+  const computeProgress = useCallback((el: HTMLElement) => {
+    const maxScroll = Math.max(el.scrollHeight - el.clientHeight, 0);
+    if (maxScroll <= 0) return 0;
+    return Math.min(Math.max(el.scrollTop / maxScroll, 0), 1);
+  }, []);
+
+  const buildLastReadPosition = useCallback((el: HTMLElement, progress: number) => {
+    return JSON.stringify({
+      scrollTop: Math.max(el.scrollTop, 0),
+      scrollHeight: el.scrollHeight,
+      clientHeight: el.clientHeight,
+      progress,
+      savedAt: new Date().toISOString(),
+    });
+  }, []);
+
+  const persistReadingProgress = useCallback(
+    async (force = false) => {
+      if (!doc) return;
+      const el = document.querySelector("main");
+      if (!(el instanceof HTMLElement)) return;
+
+      const progress = computeProgress(el);
+      const previous = lastSavedProgressRef.current;
+
+      // Ignore tiny changes unless explicitly forced.
+      if (!force && Math.abs(progress - previous) < 0.01) {
+        return;
+      }
+
+      const lastReadPosition = buildLastReadPosition(el, progress);
+
+      try {
+        await updateDocument(doc.id, {
+          reading_progress: progress,
+          last_read_position: lastReadPosition,
+        });
+        lastSavedProgressRef.current = progress;
+
+        // Keep local document data in sync without forcing revalidation.
+        await mutate(
+          (current) =>
+            current
+              ? {
+                  ...current,
+                  reading_progress: progress,
+                  last_read_position: lastReadPosition,
+                }
+              : current,
+          false,
+        );
+      } catch {
+        // Best effort only; reading should continue even if save fails.
+      }
+    },
+    [buildLastReadPosition, computeProgress, doc, mutate],
+  );
+
+  // Restore last scroll position on open (best effort).
+  useEffect(() => {
+    if (!doc || !content) return;
+    const el = document.querySelector("main");
+    if (!(el instanceof HTMLElement)) return;
+
+    const maxScroll = Math.max(el.scrollHeight - el.clientHeight, 0);
+    let target = 0;
+
+    if (doc.last_read_position) {
+      try {
+        const parsed = JSON.parse(doc.last_read_position) as {
+          scrollTop?: number;
+          progress?: number;
+        };
+        if (typeof parsed.scrollTop === "number") {
+          target = parsed.scrollTop;
+        } else if (typeof parsed.progress === "number") {
+          target = parsed.progress * maxScroll;
+        }
+      } catch {
+        // ignore invalid stored JSON
+      }
+    }
+
+    if (target <= 0 && doc.reading_progress > 0) {
+      target = doc.reading_progress * maxScroll;
+    }
+
+    if (target > 0) {
+      requestAnimationFrame(() => {
+        el.scrollTo({ top: Math.min(target, maxScroll), behavior: "auto" });
+      });
+    }
+
+    lastSavedProgressRef.current = doc.reading_progress ?? 0;
+  }, [content, doc]);
+
+  // Debounced reading progress persistence.
+  useEffect(() => {
+    if (!doc) return;
+
+    const el = document.querySelector("main");
+    if (!(el instanceof HTMLElement)) return;
+
+    function onScroll() {
+      if (progressDebounceRef.current) {
+        window.clearTimeout(progressDebounceRef.current);
+      }
+
+      progressDebounceRef.current = window.setTimeout(() => {
+        void persistReadingProgress(false);
+      }, 1500);
+    }
+
+    function flushNow() {
+      if (progressDebounceRef.current) {
+        window.clearTimeout(progressDebounceRef.current);
+        progressDebounceRef.current = null;
+      }
+      void persistReadingProgress(true);
+    }
+
+    el.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("beforeunload", flushNow);
+    window.addEventListener("pagehide", flushNow);
+
+    return () => {
+      el.removeEventListener("scroll", onScroll);
+      window.removeEventListener("beforeunload", flushNow);
+      window.removeEventListener("pagehide", flushNow);
+      flushNow();
+    };
+  }, [doc, persistReadingProgress]);
 
   function scrollMainBy(deltaY: number) {
     const el = document.querySelector("main");
