@@ -48,6 +48,7 @@ export function DocumentList() {
     saveDialogOpen,
     shortcutsHelpOpen,
     setShortcutsHelpOpen,
+    searchOpen,
   } = useAppShell();
 
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -111,7 +112,7 @@ export function DocumentList() {
   }
 
   useKeyboardShortcuts({
-    enabled: !saveDialogOpen && !shortcutsHelpOpen,
+    enabled: !saveDialogOpen && !shortcutsHelpOpen && !searchOpen,
     bindings: {
       j: () => {
         if (documents.length === 0) return;
@@ -139,7 +140,6 @@ export function DocumentList() {
       e: () => setStatus("archive"),
       "#": trashSelected,
       "?": () => setShortcutsHelpOpen(true),
-      "/": () => setShortcutsHelpOpen(true),
       "g h": () => navigateToStatus("inbox"),
       "g i": () => navigateToStatus("inbox"),
       "g r": () => navigateToStatus("reading"),

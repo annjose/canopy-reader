@@ -42,6 +42,9 @@ export function ShortcutsHelpModal() {
 
         <div className="mt-5 grid gap-6 md:grid-cols-2">
           <Section title="Library">
+            <Shortcut k="/" d="Search" />
+            <Shortcut k="Ctrl/⌘ K" d="Search (command palette)" />
+            <div className="mt-3" />
             <Shortcut k="j / k" d="Next / previous item" />
             <Shortcut k="↑ / ↓" d="Next / previous item" />
             <Shortcut k="Enter / o" d="Open selected item" />
@@ -58,10 +61,13 @@ export function ShortcutsHelpModal() {
             <Shortcut k="g r" d="Go to Reading" />
             <Shortcut k="g l" d="Go to Later" />
             <Shortcut k="g a" d="Go to Archive" />
-            <Shortcut k="? / /" d="Show this help" />
+            <Shortcut k="?" d="Show this help" />
           </Section>
 
           <Section title="Reader">
+            <Shortcut k="/" d="Search" />
+            <Shortcut k="Ctrl/⌘ K" d="Search (command palette)" />
+            <div className="mt-3" />
             <Shortcut k="j / k" d="Scroll down / up" />
             <Shortcut k="↑ / ↓" d="Scroll up / down" />
             <Shortcut k="u / Esc" d="Back to list" />
@@ -71,7 +77,7 @@ export function ShortcutsHelpModal() {
             <Shortcut k="v" d="Open original URL" />
             <Shortcut k="p" d="Toggle right panel" />
             <Shortcut k="c" d="Toggle table of contents" />
-            <Shortcut k="? / /" d="Show this help" />
+            <Shortcut k="?" d="Show this help" />
           </Section>
         </div>
 

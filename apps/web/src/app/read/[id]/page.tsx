@@ -22,6 +22,7 @@ export default function ReadPage() {
     saveDialogOpen,
     shortcutsHelpOpen,
     setShortcutsHelpOpen,
+    searchOpen,
   } = useAppShell();
 
   const [tocOpen, setTocOpen] = useState(false);
@@ -78,7 +79,7 @@ export default function ReadPage() {
   }
 
   useKeyboardShortcuts({
-    enabled: !saveDialogOpen && !shortcutsHelpOpen,
+    enabled: !saveDialogOpen && !shortcutsHelpOpen && !searchOpen,
     bindings: {
       j: () => scrollMainBy(80),
       k: () => scrollMainBy(-80),
@@ -93,7 +94,6 @@ export default function ReadPage() {
       p: () => setRightPanelOpen(!rightPanelOpen),
       c: () => setTocOpen((o) => !o),
       "?": () => setShortcutsHelpOpen(true),
-      "/": () => setShortcutsHelpOpen(true),
     },
   });
 

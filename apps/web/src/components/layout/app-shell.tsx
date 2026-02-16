@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, createContext, useContext } from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import { Sidebar } from "./sidebar";
 import { RightPanel } from "./right-panel";
 import { ShortcutsHelpModal } from "@/components/keyboard/shortcuts-help-modal";
+import { SearchPalette } from "@/components/search/search-palette";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import type { Document } from "@canopy/shared";
 
 type AppShellContextValue = {
@@ -17,6 +19,8 @@ type AppShellContextValue = {
   setSaveDialogOpen: (open: boolean) => void;
   shortcutsHelpOpen: boolean;
   setShortcutsHelpOpen: (open: boolean) => void;
+  searchOpen: boolean;
+  setSearchOpen: (open: boolean) => void;
 };
 
 const AppShellContext = createContext<AppShellContextValue | null>(null);
@@ -35,6 +39,42 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
   const [shortcutsHelpOpen, setShortcutsHelpOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
+
+  function isEditableTarget(target: EventTarget | null): boolean {
+    if (!target || !(target instanceof HTMLElement)) return false;
+    const tag = target.tagName.toLowerCase();
+    if (tag === "input" || tag === "textarea" || tag === "select") return true;
+    if (target.isContentEditable) return true;
+    return !!target.closest(
+      'input, textarea, select, [contenteditable="true"], [contenteditable=""]',
+    );
+  }
+
+  // Global shortcuts: search + help
+  useKeyboardShortcuts({
+    enabled: !saveDialogOpen && !shortcutsHelpOpen,
+    bindings: {
+      "?": () => setShortcutsHelpOpen(true),
+      "/": () => setSearchOpen(true),
+    },
+  });
+
+  // Cmd/Ctrl+K opens search (common command palette shortcut).
+  useEffect(() => {
+    function onKeyDown(e: KeyboardEvent) {
+      if (e.defaultPrevented) return;
+      if (!(e.metaKey || e.ctrlKey)) return;
+      if (e.key.toLowerCase() !== "k") return;
+      if (isEditableTarget(e.target)) return;
+
+      e.preventDefault();
+      setSearchOpen((open) => !open);
+    }
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, []);
 
   return (
     <AppShellContext.Provider
@@ -49,6 +89,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         setSaveDialogOpen,
         shortcutsHelpOpen,
         setShortcutsHelpOpen,
+        searchOpen,
+        setSearchOpen,
       }}
     >
       <div
@@ -62,6 +104,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         {rightPanelOpen && <RightPanel />}
       </div>
       <ShortcutsHelpModal />
+      <SearchPalette />
     </AppShellContext.Provider>
   );
 }
