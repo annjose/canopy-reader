@@ -48,8 +48,8 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - PR/Commit:
 
 ### Milestone 7 — Highlights capture (save + list)
-- Status: Not started
-- Notes:
+- Status: In progress
+- Notes: Reader text-selection popover implemented to create highlights (default yellow) with optional note + color picker; syncs to Notebook; selection trigger made more reliable by listening on document mouseup.
 - PR/Commit:
 
 ### Milestone 8 (Backlog) — In-text highlight rendering

@@ -1,4 +1,11 @@
-import type { Document, DocumentNote, DocumentStatus, Highlight, Tag } from "@canopy/shared";
+import type {
+  Document,
+  DocumentNote,
+  DocumentStatus,
+  Highlight,
+  HighlightColor,
+  Tag,
+} from "@canopy/shared";
 
 const BASE = "/api/documents";
 
@@ -75,6 +82,22 @@ export function updateHighlight(
 export function deleteHighlight(highlightId: string) {
   return fetchJSON<{ success: boolean }>(`/api/highlights/${highlightId}`, {
     method: "DELETE",
+  });
+}
+
+export function createHighlight(
+  documentId: string,
+  fields: {
+    text: string;
+    color?: HighlightColor;
+    note?: string | null;
+    position_data?: string | null;
+  },
+) {
+  return fetchJSON<Highlight>(`${BASE}/${documentId}/highlights`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
   });
 }
 
