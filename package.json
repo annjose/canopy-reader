@@ -8,7 +8,7 @@
     "typecheck": "turbo typecheck",
     "migrate:local": "./scripts/migrate.sh --local",
     "migrate:remote": "./scripts/migrate.sh --remote",
-    "deploy:web": "turbo deploy --filter=@canopy/web"
+    "deploy:web": "turbo run deploy --filter=@canopy/web"
   },
   "devDependencies": {
     "turbo": "^2.3.0",
