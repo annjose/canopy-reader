@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/hooks/use-toast";
 
 export function SaveDialog() {
   const { saveDialogOpen, setSaveDialogOpen } = useAppShell();
@@ -31,11 +32,21 @@ export function SaveDialog() {
 
     try {
       const doc = await saveDocument(url.trim());
+      toast({
+        title: "Saved",
+        description: doc.title || "Saved article",
+      });
       setUrl("");
       setSaveDialogOpen(false);
       router.push(`/read/${doc.id}`);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save");
+      const message = err instanceof Error ? err.message : "Failed to save";
+      setError(message);
+      toast({
+        variant: "destructive",
+        title: "Save failed",
+        description: message,
+      });
     } finally {
       setLoading(false);
     }

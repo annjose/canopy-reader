@@ -8,6 +8,8 @@ import { ReaderToolbar } from "@/components/reader/reader-toolbar";
 import { ReaderView } from "@/components/reader/reader-view";
 import { ProgressBar } from "@/components/reader/progress-bar";
 import { deleteDocument, updateDocument } from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_LABELS } from "@canopy/shared";
 import { useEffect, useState } from "react";
 
 export default function ReadPage() {
@@ -57,20 +59,56 @@ export default function ReadPage() {
 
   async function toggleFavorite() {
     if (!doc) return;
-    await updateDocument(doc.id, { is_favorite: doc.is_favorite ? 0 : 1 });
-    await mutate();
+    try {
+      await updateDocument(doc.id, { is_favorite: doc.is_favorite ? 0 : 1 });
+      toast({
+        title: doc.is_favorite ? "Unfavorited" : "Favorited",
+        description: doc.title,
+      });
+      await mutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to update favorite",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   async function archive() {
     if (!doc) return;
-    await updateDocument(doc.id, { status: "archive" });
-    await mutate();
+    try {
+      await updateDocument(doc.id, { status: "archive" });
+      toast({
+        title: `Moved to ${STATUS_LABELS.archive}`,
+        description: doc.title,
+      });
+      await mutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to archive",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   async function trash() {
     if (!doc) return;
-    await deleteDocument(doc.id);
-    router.push("/library");
+    try {
+      await deleteDocument(doc.id);
+      toast({
+        title: "Moved to Trash",
+        description: doc.title,
+      });
+      router.push("/library");
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to trash",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   function openOriginal() {

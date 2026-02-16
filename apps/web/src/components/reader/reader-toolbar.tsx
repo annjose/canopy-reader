@@ -3,6 +3,8 @@
 import Link from "next/link";
 import type { Document } from "@canopy/shared";
 import { updateDocument, deleteDocument } from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_LABELS } from "@canopy/shared";
 import { Toc } from "./toc";
 
 type Props = {
@@ -21,18 +23,54 @@ export function ReaderToolbar({
   onMutate,
 }: Props) {
   async function toggleFavorite() {
-    await updateDocument(doc.id, { is_favorite: doc.is_favorite ? 0 : 1 });
-    onMutate();
+    try {
+      await updateDocument(doc.id, { is_favorite: doc.is_favorite ? 0 : 1 });
+      toast({
+        title: doc.is_favorite ? "Unfavorited" : "Favorited",
+        description: doc.title,
+      });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to update favorite",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   async function archive() {
-    await updateDocument(doc.id, { status: "archive" });
-    onMutate();
+    try {
+      await updateDocument(doc.id, { status: "archive" });
+      toast({
+        title: `Moved to ${STATUS_LABELS.archive}`,
+        description: doc.title,
+      });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to archive",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   async function trash() {
-    await deleteDocument(doc.id);
-    onMutate();
+    try {
+      await deleteDocument(doc.id);
+      toast({
+        title: "Moved to Trash",
+        description: doc.title,
+      });
+      onMutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to trash",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   return (

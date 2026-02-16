@@ -6,6 +6,8 @@ import { useDocuments } from "@/hooks/use-documents";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useAppShell } from "@/components/layout/app-shell";
 import { deleteDocument, updateDocument } from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
+import { STATUS_LABELS } from "@canopy/shared";
 import { DocumentRow } from "./document-row";
 import type { DocumentStatus } from "@canopy/shared";
 
@@ -76,22 +78,58 @@ export function DocumentList() {
 
   async function toggleFavorite() {
     if (!selectedDoc) return;
-    await updateDocument(selectedDoc.id, {
-      is_favorite: selectedDoc.is_favorite ? 0 : 1,
-    });
-    await mutate();
+    try {
+      await updateDocument(selectedDoc.id, {
+        is_favorite: selectedDoc.is_favorite ? 0 : 1,
+      });
+      toast({
+        title: selectedDoc.is_favorite ? "Unfavorited" : "Favorited",
+        description: selectedDoc.title,
+      });
+      await mutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to update favorite",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   async function setStatus(next: DocumentStatus) {
     if (!selectedDoc) return;
-    await updateDocument(selectedDoc.id, { status: next });
-    await mutate();
+    try {
+      await updateDocument(selectedDoc.id, { status: next });
+      toast({
+        title: `Moved to ${STATUS_LABELS[next]}`,
+        description: selectedDoc.title,
+      });
+      await mutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to update status",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   async function trashSelected() {
     if (!selectedDoc) return;
-    await deleteDocument(selectedDoc.id);
-    await mutate();
+    try {
+      await deleteDocument(selectedDoc.id);
+      toast({
+        title: "Moved to Trash",
+        description: selectedDoc.title,
+      });
+      await mutate();
+    } catch (e) {
+      toast({
+        variant: "destructive",
+        title: "Failed to trash",
+        description: e instanceof Error ? e.message : "Unknown error",
+      });
+    }
   }
 
   function openSelected() {

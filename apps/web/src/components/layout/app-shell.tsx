@@ -5,6 +5,7 @@ import { Sidebar } from "./sidebar";
 import { RightPanel } from "./right-panel";
 import { ShortcutsHelpModal } from "@/components/keyboard/shortcuts-help-modal";
 import { SearchPalette } from "@/components/search/search-palette";
+import { Toaster } from "@/components/ui/toaster";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import type { Document } from "@canopy/shared";
 
@@ -105,6 +106,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       </div>
       <ShortcutsHelpModal />
       <SearchPalette />
+      <Toaster />
     </AppShellContext.Provider>
   );
 }
