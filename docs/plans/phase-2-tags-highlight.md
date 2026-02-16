@@ -296,6 +296,39 @@ Template should match spec (frontmatter + notes + highlights).
 
 ---
 
+## Milestone 11 — UI polish (includes Dark Mode)
+
+This milestone explicitly covers the **UI polish** items listed under Phase 2 in `docs/canopy-spec.md`:
+
+1. **Persist reading progress to D1**
+   - Implement a debounced writer from reader scroll/progress → `PATCH /api/documents/[id]` (`reading_progress`, `last_read_position`).
+   - Ensure we don’t spam writes (e.g. debounce 1–3s and also write on unmount).
+
+2. **Close left / right panels like Readwise**
+   - Add bindings for `[` and `]` to toggle sidebar collapse and right panel.
+   - Ensure behavior differs appropriately between desktop vs mobile sheets.
+
+3. **Font size adjustment in reader**
+   - Add UI control in the reader toolbar.
+   - Store preference locally (e.g. `localStorage`) and apply via a CSS variable on `.article-content`.
+
+4. **Dark mode**
+   - Add `:root` + `.dark` token overrides in `apps/web/src/app/globals.css`.
+   - Add a theme toggle (likely in sidebar or a simple Preferences page later).
+   - Persist theme preference (localStorage) and apply by toggling the `dark` class on `document.documentElement`.
+   - Update hard-coded article typography colors (currently fixed grays/blues) to use tokens or add `.dark` overrides.
+
+### Acceptance criteria
+- Reader progress persists and reloads without regressions.
+- `[`/`]` panel shortcuts work on desktop and don’t break mobile.
+- Font size setting persists across reload.
+- Dark mode works across app shell + reader content with acceptable contrast.
+
+### Commit
+- Stage UI polish work.
+
+---
+
 ## Testing & Release Process (per milestone)
 
 For each milestone:

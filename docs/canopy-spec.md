@@ -358,6 +358,7 @@ Two tabs:
    - Persist reading progress to D1 (UI progress bar exists, but progress isn’t written back yet)
    - Close left / right panels like in Readwise (`[` / `]`)
    - Font size adjustment in reader
+   - Add Dark  mode
 
 ### Phase 3: RSS Feeds
 **Goal**: Subscribe to and read RSS feeds within the app.

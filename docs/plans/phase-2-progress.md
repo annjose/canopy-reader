@@ -67,6 +67,11 @@ This doc tracks implementation progress for Phase 2 against the plan:
 - Notes:
 - PR/Commit:
 
+### Milestone 11 — UI polish (reading progress, panels, font size, dark mode)
+- Status: Not started
+- Notes:
+- PR/Commit:
+
 ---
 
 ## Decisions Log
