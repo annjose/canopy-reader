@@ -3,6 +3,7 @@
 import { useState, createContext, useContext } from "react";
 import { Sidebar } from "./sidebar";
 import { RightPanel } from "./right-panel";
+import { ShortcutsHelpModal } from "@/components/keyboard/shortcuts-help-modal";
 import type { Document } from "@canopy/shared";
 
 type AppShellContextValue = {
@@ -14,6 +15,8 @@ type AppShellContextValue = {
   setSidebarCollapsed: (collapsed: boolean) => void;
   saveDialogOpen: boolean;
   setSaveDialogOpen: (open: boolean) => void;
+  shortcutsHelpOpen: boolean;
+  setShortcutsHelpOpen: (open: boolean) => void;
 };
 
 const AppShellContext = createContext<AppShellContextValue | null>(null);
@@ -31,6 +34,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const [rightPanelOpen, setRightPanelOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [saveDialogOpen, setSaveDialogOpen] = useState(false);
+  const [shortcutsHelpOpen, setShortcutsHelpOpen] = useState(false);
 
   return (
     <AppShellContext.Provider
@@ -43,6 +47,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         setSidebarCollapsed,
         saveDialogOpen,
         setSaveDialogOpen,
+        shortcutsHelpOpen,
+        setShortcutsHelpOpen,
       }}
     >
       <div
@@ -55,6 +61,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <main className="overflow-y-auto">{children}</main>
         {rightPanelOpen && <RightPanel />}
       </div>
+      <ShortcutsHelpModal />
     </AppShellContext.Provider>
   );
 }

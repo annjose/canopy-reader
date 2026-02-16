@@ -1,12 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 
 type TocItem = { id: string; text: string; level: number };
 
-export function Toc({ contentHtml }: { contentHtml: string }) {
+type Props = {
+  contentHtml: string;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+
+export function Toc({ contentHtml, open, onOpenChange }: Props) {
   const [items, setItems] = useState<TocItem[]>([]);
-  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     const parser = new DOMParser();
@@ -24,6 +29,23 @@ export function Toc({ contentHtml }: { contentHtml: string }) {
     });
 
     setItems(extracted);
+
+    // Ensure headings in the rendered article DOM have ids matching the extracted list
+    // (useful when content has headings without ids).
+    const applyIds = () => {
+      const container = document.querySelector(".article-content");
+      if (!container) return;
+      const rendered = container.querySelectorAll("h1, h2, h3");
+      extracted.forEach((item, idx) => {
+        const el = rendered[idx] as HTMLElement | undefined;
+        if (!el) return;
+        if (!el.id) el.id = item.id;
+      });
+    };
+
+    // Run twice to handle timing between toolbar render and article render.
+    window.setTimeout(applyIds, 0);
+    window.setTimeout(applyIds, 50);
   }, [contentHtml]);
 
   if (items.length === 0) return null;
@@ -31,7 +53,7 @@ export function Toc({ contentHtml }: { contentHtml: string }) {
   return (
     <div className="relative">
       <button
-        onClick={() => setOpen(!open)}
+        onClick={() => onOpenChange(!open)}
         className="p-2 rounded hover:bg-gray-100 text-gray-500"
         title="Table of contents"
       >
@@ -46,7 +68,7 @@ export function Toc({ contentHtml }: { contentHtml: string }) {
               onClick={() => {
                 const el = document.getElementById(item.id);
                 el?.scrollIntoView({ behavior: "smooth" });
-                setOpen(false);
+                onOpenChange(false);
               }}
               className="block w-full text-left rounded px-2 py-1.5 text-sm text-gray-600 hover:bg-gray-100 hover:text-gray-900 truncate"
               style={{ paddingLeft: `${(item.level - 1) * 12 + 8}px` }}
@@ -62,7 +84,15 @@ export function Toc({ contentHtml }: { contentHtml: string }) {
 
 function TocIcon() {
   return (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round">
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 16 16"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+    >
       <path d="M2 3h12M2 7h8M2 11h10" />
     </svg>
   );

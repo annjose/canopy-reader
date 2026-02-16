@@ -6,10 +6,12 @@ import { updateDocument, deleteDocument } from "@/lib/api";
 
 type Props = {
   document: Document;
+  selected: boolean;
+  onSelect: () => void;
   onMutate: () => void;
 };
 
-export function DocumentRow({ document: doc, onMutate }: Props) {
+export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Props) {
   async function toggleFavorite() {
     await updateDocument(doc.id, {
       is_favorite: doc.is_favorite ? 0 : 1,
@@ -28,7 +30,12 @@ export function DocumentRow({ document: doc, onMutate }: Props) {
   }
 
   return (
-    <div className="group flex items-start gap-3 px-4 py-3 hover:bg-gray-50 border-b border-gray-100">
+    <div
+      className={`group flex items-start gap-3 px-4 py-3 border-b border-gray-100 cursor-default ${
+        selected ? "bg-gray-100" : "hover:bg-gray-50"
+      }`}
+      onClick={onSelect}
+    >
       {doc.image_url && (
         <img
           src={doc.image_url}

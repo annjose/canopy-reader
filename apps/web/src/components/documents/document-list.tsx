@@ -1,7 +1,11 @@
 "use client";
 
 import { useSearchParams, useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import { useDocuments } from "@/hooks/use-documents";
+import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
+import { useAppShell } from "@/components/layout/app-shell";
+import { deleteDocument, updateDocument } from "@/lib/api";
 import { DocumentRow } from "./document-row";
 import type { DocumentStatus } from "@canopy/shared";
 
@@ -38,6 +42,96 @@ export function DocumentList() {
         : { status, sort };
 
   const { documents, nextCursor, isLoading, mutate } = useDocuments(params);
+  const {
+    setSelectedDocument,
+    setRightPanelOpen,
+    saveDialogOpen,
+    shortcutsHelpOpen,
+    setShortcutsHelpOpen,
+  } = useAppShell();
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const selectedDoc = useMemo(
+    () => documents[selectedIndex] ?? null,
+    [documents, selectedIndex],
+  );
+
+  // Keep selection valid as the list changes.
+  useEffect(() => {
+    if (documents.length === 0) {
+      setSelectedIndex(0);
+      setSelectedDocument(null);
+      return;
+    }
+    setSelectedIndex((i) => Math.max(0, Math.min(i, documents.length - 1)));
+  }, [documents.length, setSelectedDocument]);
+
+  // Drive the right panel from the current selection.
+  useEffect(() => {
+    if (!selectedDoc) return;
+    setSelectedDocument(selectedDoc);
+    setRightPanelOpen(true);
+  }, [selectedDoc, setSelectedDocument, setRightPanelOpen]);
+
+  async function toggleFavorite() {
+    if (!selectedDoc) return;
+    await updateDocument(selectedDoc.id, {
+      is_favorite: selectedDoc.is_favorite ? 0 : 1,
+    });
+    await mutate();
+  }
+
+  async function setStatus(next: DocumentStatus) {
+    if (!selectedDoc) return;
+    await updateDocument(selectedDoc.id, { status: next });
+    await mutate();
+  }
+
+  async function trashSelected() {
+    if (!selectedDoc) return;
+    await deleteDocument(selectedDoc.id);
+    await mutate();
+  }
+
+  function openSelected() {
+    if (!selectedDoc) return;
+    router.push(`/read/${selectedDoc.id}`);
+  }
+
+  function navigateToStatus(next: DocumentStatus) {
+    const sp = new URLSearchParams();
+    sp.set("status", next);
+    if (sort) sp.set("sort", sort);
+    router.push(`/library?${sp.toString()}`);
+  }
+
+  useKeyboardShortcuts({
+    enabled: !saveDialogOpen && !shortcutsHelpOpen,
+    bindings: {
+      j: () => {
+        if (documents.length === 0) return;
+        setSelectedIndex((i) => Math.min(documents.length - 1, i + 1));
+      },
+      k: () => {
+        if (documents.length === 0) return;
+        setSelectedIndex((i) => Math.max(0, i - 1));
+      },
+      enter: openSelected,
+      o: openSelected,
+      s: toggleFavorite,
+      i: () => setStatus("inbox"),
+      r: () => setStatus("reading"),
+      l: () => setStatus("later"),
+      e: () => setStatus("archive"),
+      "#": trashSelected,
+      "?": () => setShortcutsHelpOpen(true),
+      "g h": () => navigateToStatus("inbox"),
+      "g i": () => navigateToStatus("inbox"),
+      "g r": () => navigateToStatus("reading"),
+      "g l": () => navigateToStatus("later"),
+      "g a": () => navigateToStatus("archive"),
+    },
+  });
 
   function handleSort(newSort: string) {
     const sp = new URLSearchParams(searchParams.toString());
@@ -91,8 +185,14 @@ export function DocumentList() {
         </div>
       )}
 
-      {documents.map((doc) => (
-        <DocumentRow key={doc.id} document={doc} onMutate={() => mutate()} />
+      {documents.map((doc, i) => (
+        <DocumentRow
+          key={doc.id}
+          document={doc}
+          selected={i === selectedIndex}
+          onSelect={() => setSelectedIndex(i)}
+          onMutate={() => mutate()}
+        />
       ))}
 
       {nextCursor && (

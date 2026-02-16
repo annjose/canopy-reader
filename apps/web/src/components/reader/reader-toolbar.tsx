@@ -8,10 +8,18 @@ import { Toc } from "./toc";
 type Props = {
   document: Document;
   contentHtml: string | null;
+  tocOpen: boolean;
+  onTocOpenChange: (open: boolean) => void;
   onMutate: () => void;
 };
 
-export function ReaderToolbar({ document: doc, contentHtml, onMutate }: Props) {
+export function ReaderToolbar({
+  document: doc,
+  contentHtml,
+  tocOpen,
+  onTocOpenChange,
+  onMutate,
+}: Props) {
   async function toggleFavorite() {
     await updateDocument(doc.id, { is_favorite: doc.is_favorite ? 0 : 1 });
     onMutate();
@@ -39,7 +47,13 @@ export function ReaderToolbar({ document: doc, contentHtml, onMutate }: Props) {
 
       <div className="flex-1" />
 
-      {contentHtml && <Toc contentHtml={contentHtml} />}
+      {contentHtml && (
+        <Toc
+          contentHtml={contentHtml}
+          open={tocOpen}
+          onOpenChange={onTocOpenChange}
+        />
+      )}
 
       <button
         onClick={toggleFavorite}
