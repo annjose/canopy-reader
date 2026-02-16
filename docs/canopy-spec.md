@@ -354,6 +354,11 @@ Two tabs:
    - Export all notes + highlights (bulk)
    - Template: frontmatter (title, author, url, tags, date) + highlights with notes
 
+6. **UI polish**
+   - Persist reading progress to D1 (UI progress bar exists, but progress isn’t written back yet)
+   - Close left / right panels like in Readwise (`[` / `]`)
+   - Font size adjustment in reader
+
 ### Phase 3: RSS Feeds
 **Goal**: Subscribe to and read RSS feeds within the app.
 

@@ -36,9 +36,3 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 - shadcn/ui foundation added (Tailwind tokens + primitives like Dialog/Command/Input/Button)
 - Toast notifications for common document actions (save, favorite, status change, trash)
 - Reader view now displays a document header (title + basic metadata)
-
-### Still pending / optional polish
-
-- Persist reading progress to D1 (UI progress bar exists, but progress isn’t written back yet)
-- Prev/next document navigation in reader (`[` / `]`)
-- Font size adjustment in reader
