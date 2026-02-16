@@ -93,6 +93,7 @@ export default function ReadPage() {
       p: () => setRightPanelOpen(!rightPanelOpen),
       c: () => setTocOpen((o) => !o),
       "?": () => setShortcutsHelpOpen(true),
+      "/": () => setShortcutsHelpOpen(true),
     },
   });
 

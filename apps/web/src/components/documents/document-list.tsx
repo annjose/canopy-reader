@@ -98,6 +98,11 @@ export function DocumentList() {
     router.push(`/read/${selectedDoc.id}`);
   }
 
+  function openOriginal() {
+    if (!selectedDoc?.url) return;
+    window.open(selectedDoc.url, "_blank", "noopener,noreferrer");
+  }
+
   function navigateToStatus(next: DocumentStatus) {
     const sp = new URLSearchParams();
     sp.set("status", next);
@@ -116,8 +121,17 @@ export function DocumentList() {
         if (documents.length === 0) return;
         setSelectedIndex((i) => Math.max(0, i - 1));
       },
+      arrowdown: () => {
+        if (documents.length === 0) return;
+        setSelectedIndex((i) => Math.min(documents.length - 1, i + 1));
+      },
+      arrowup: () => {
+        if (documents.length === 0) return;
+        setSelectedIndex((i) => Math.max(0, i - 1));
+      },
       enter: openSelected,
       o: openSelected,
+      v: openOriginal,
       s: toggleFavorite,
       i: () => setStatus("inbox"),
       r: () => setStatus("reading"),
@@ -125,6 +139,7 @@ export function DocumentList() {
       e: () => setStatus("archive"),
       "#": trashSelected,
       "?": () => setShortcutsHelpOpen(true),
+      "/": () => setShortcutsHelpOpen(true),
       "g h": () => navigateToStatus("inbox"),
       "g i": () => navigateToStatus("inbox"),
       "g r": () => navigateToStatus("reading"),
