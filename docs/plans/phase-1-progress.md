@@ -28,4 +28,4 @@ Tracks progress against the Phase 1 plan: [`phase-1-foundation.md`](phase-1-foun
 - `pnpm typecheck` and `pnpm build` both pass
 - Cloudflare account: use ann.jose@gmail.com (not georgeck@gmail.com)
 - D1 database ID: `b0c9028e-0805-45c6-b076-3c8913e7300f`
-- Deployed URL: `https://canopy-web.annjose.workers.dev`
+- Deployed URL: `https://canopy.annjose.workers.dev`
