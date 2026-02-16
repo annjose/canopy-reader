@@ -1,7 +1,7 @@
 -- Migration 0001: Create documents table (Phase 1)
 -- Stores all content types. Phase 1 uses type='article' only.
 
-CREATE TABLE documents (
+CREATE TABLE IF NOT EXISTS documents (
   id TEXT PRIMARY KEY,                              -- nanoid
   type TEXT NOT NULL,                               -- 'article' | 'book' | 'pdf' | 'email' | 'rss_item'
   status TEXT NOT NULL DEFAULT 'inbox',             -- 'inbox' | 'reading' | 'later' | 'archive'
@@ -37,9 +37,9 @@ CREATE TABLE documents (
   updated_at TEXT NOT NULL DEFAULT (datetime('now'))
 );
 
-CREATE INDEX idx_documents_status ON documents(status);
-CREATE INDEX idx_documents_type ON documents(type);
-CREATE INDEX idx_documents_is_trashed ON documents(is_trashed);
-CREATE INDEX idx_documents_created_at ON documents(created_at);
-CREATE INDEX idx_documents_feed_id ON documents(feed_id);
-CREATE INDEX idx_documents_is_favorite ON documents(is_favorite);
+CREATE INDEX IF NOT EXISTS idx_documents_status ON documents(status);
+CREATE INDEX IF NOT EXISTS idx_documents_type ON documents(type);
+CREATE INDEX IF NOT EXISTS idx_documents_is_trashed ON documents(is_trashed);
+CREATE INDEX IF NOT EXISTS idx_documents_created_at ON documents(created_at);
+CREATE INDEX IF NOT EXISTS idx_documents_feed_id ON documents(feed_id);
+CREATE INDEX IF NOT EXISTS idx_documents_is_favorite ON documents(is_favorite);
