@@ -8,6 +8,7 @@ export type {
   Feed,
   Highlight,
   HighlightColor,
+  NotebookData,
   Tag,
 } from "./types";
 

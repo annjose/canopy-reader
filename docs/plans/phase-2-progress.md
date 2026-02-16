@@ -29,7 +29,7 @@ This doc tracks implementation progress for Phase 2 against the plan:
 
 ### Milestone 3 — API routes (tags, document tags, notes, highlights)
 - Status: In progress
-- Notes: Tags API routes added (`/api/tags`, `/api/tags/[id]`), plus document tag assignment (`/api/documents/[id]/tags`), document note endpoints (`/api/documents/[id]/note`), highlight endpoints (`/api/documents/[id]/highlights`, `/api/highlights/[highlightId]`), and list filter `?tag=<slug>`.
+- Notes: Tags API routes added (`/api/tags`, `/api/tags/[id]`), plus document tag assignment (`/api/documents/[id]/tags`), document note endpoints (`/api/documents/[id]/note`), highlight endpoints (`/api/documents/[id]/highlights`, `/api/highlights/[highlightId]`), notebook bundle endpoint (`/api/documents/[id]/notebook`), and list filter `?tag=<slug>`.
 - PR/Commit:
 
 ### Milestone 4 — Shared types for Phase 2 payloads

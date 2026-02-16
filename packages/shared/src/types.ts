@@ -86,6 +86,13 @@ export interface DocumentNote {
   updated_at: string;
 }
 
+/** Bundle of tags, note, and highlights for a document notebook panel */
+export interface NotebookData {
+  tags: Tag[];
+  note: DocumentNote | null;
+  highlights: Highlight[];
+}
+
 /** RSS/Atom feed subscription */
 export interface Feed {
   id: string;
