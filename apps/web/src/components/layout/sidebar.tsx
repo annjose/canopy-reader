@@ -8,16 +8,13 @@ import { useFeeds } from "@/hooks/use-feeds";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/library", icon: HomeIcon },
-  { label: "Tags", href: "/tags", icon: TagIcon },
-  { label: "Favorites", href: "/library?is_favorite=true", icon: StarIcon },
-  { label: "Trash", href: "/library?is_trashed=true", icon: TrashIcon },
-];
-
-const LIBRARY_ITEMS = [
   { label: "Articles", href: "/library?type=article", icon: ArticleIcon },
   { label: "Books", href: "/library?type=book", icon: BookIcon },
   { label: "PDFs", href: "/library?type=pdf", icon: PdfIcon },
   { label: "Emails", href: "/library?type=email", icon: EmailIcon },
+  { label: "Tags", href: "/tags", icon: TagIcon },
+  { label: "Favorites", href: "/library?is_favorite=true", icon: StarIcon },
+  { label: "Trash", href: "/library?is_trashed=true", icon: TrashIcon },
 ];
 
 export function Sidebar({
@@ -36,7 +33,6 @@ export function Sidebar({
     theme,
     toggleTheme,
   } = useAppShell();
-  const [libraryOpen, setLibraryOpen] = useState(true);
   const [feedsOpen, setFeedsOpen] = useState(true);
   const { feeds } = useFeeds();
 
@@ -131,36 +127,6 @@ export function Sidebar({
             {item.label}
           </Link>
         ))}
-
-        {/* Library section */}
-        <div className="pt-3">
-          <button
-            onClick={() => setLibraryOpen(!libraryOpen)}
-            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground"
-          >
-            <ChevronIcon open={libraryOpen} />
-            Library
-          </button>
-          {libraryOpen && (
-            <div className="space-y-0.5 mt-0.5">
-              {LIBRARY_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={() => onNavigate?.()}
-                  className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
-                    isActive(item.href)
-                      ? "bg-accent font-medium text-foreground"
-                      : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
-                  }`}
-                >
-                  <item.icon />
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
 
         {/* Feeds section */}
         <div className="pt-3">
