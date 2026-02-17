@@ -458,6 +458,7 @@ Two tabs:
 4. **Dark mode**
 5. **Customizable reader themes** (font, spacing, width)
 6. **Text-to-speech** (optional)
+7. **Automatic feed polling** — Cloudflare Cron Trigger worker to poll RSS feeds on a schedule (e.g. every 30 minutes), hitting `POST /api/feeds/poll`
 
 ---
 
