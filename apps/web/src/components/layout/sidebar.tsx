@@ -4,10 +4,10 @@ import { usePathname, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useAppShell } from "./app-shell";
+import { useFeeds } from "@/hooks/use-feeds";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/library", icon: HomeIcon },
-  { label: "Feeds", href: "/feeds", icon: RssIcon },
   { label: "Tags", href: "/tags", icon: TagIcon },
   { label: "Favorites", href: "/library?is_favorite=true", icon: StarIcon },
   { label: "Trash", href: "/library?is_trashed=true", icon: TrashIcon },
@@ -37,6 +37,8 @@ export function Sidebar({
     toggleTheme,
   } = useAppShell();
   const [libraryOpen, setLibraryOpen] = useState(true);
+  const [feedsOpen, setFeedsOpen] = useState(true);
+  const { feeds } = useFeeds();
 
   const currentUrl =
     pathname + (searchParams.toString() ? `?${searchParams.toString()}` : "");
@@ -44,9 +46,6 @@ export function Sidebar({
   function isActive(href: string) {
     if (href === "/library") {
       return currentUrl === "/library" || currentUrl === "/library?status=inbox";
-    }
-    if (href === "/feeds") {
-      return pathname === "/feeds";
     }
     return currentUrl === href;
   }
@@ -133,6 +132,7 @@ export function Sidebar({
           </Link>
         ))}
 
+        {/* Library section */}
         <div className="pt-3">
           <button
             onClick={() => setLibraryOpen(!libraryOpen)}
@@ -158,6 +158,51 @@ export function Sidebar({
                   {item.label}
                 </Link>
               ))}
+            </div>
+          )}
+        </div>
+
+        {/* Feeds section */}
+        <div className="pt-3">
+          <button
+            onClick={() => setFeedsOpen(!feedsOpen)}
+            className="flex w-full items-center gap-2 px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground"
+          >
+            <ChevronIcon open={feedsOpen} />
+            Feeds
+          </button>
+          {feedsOpen && (
+            <div className="space-y-0.5 mt-0.5">
+              {feeds.map((feed) => {
+                const feedHref = `/library?feed_id=${feed.id}`;
+                return (
+                  <Link
+                    key={feed.id}
+                    href={feedHref}
+                    onClick={() => onNavigate?.()}
+                    className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
+                      isActive(feedHref)
+                        ? "bg-accent font-medium text-foreground"
+                        : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                    }`}
+                  >
+                    <RssIcon />
+                    <span className="truncate">{feed.title}</span>
+                  </Link>
+                );
+              })}
+              <Link
+                href="/feeds"
+                onClick={() => onNavigate?.()}
+                className={`flex items-center gap-2.5 rounded-lg px-3 py-2 text-sm ${
+                  pathname === "/feeds"
+                    ? "bg-accent font-medium text-foreground"
+                    : "text-muted-foreground hover:bg-accent/50 hover:text-foreground"
+                }`}
+              >
+                <SettingsIcon />
+                Manage feeds
+              </Link>
             </div>
           )}
         </div>
@@ -285,6 +330,15 @@ function RssIcon() {
       <circle cx="3.5" cy="12.5" r="1.5" fill="currentColor" stroke="none" />
       <path d="M2 8.5a6 6 0 016 6" />
       <path d="M2 4.5a10 10 0 0110 10" />
+    </svg>
+  );
+}
+
+function SettingsIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="8" cy="8" r="2" />
+      <path d="M13.5 8a5.5 5.5 0 01-.4 2l1.2 1.2-1.6 1.6L11.5 11.6a5.5 5.5 0 01-2 .4v1.5h-2V12a5.5 5.5 0 01-2-.4l-1.2 1.2-1.6-1.6L3.9 10a5.5 5.5 0 01-.4-2H2v-2h1.5a5.5 5.5 0 01.4-2L2.7 2.8l1.6-1.6L5.5 2.4a5.5 5.5 0 012-.4V.5h2V2a5.5 5.5 0 012 .4l1.2-1.2 1.6 1.6-1.2 1.2a5.5 5.5 0 01.4 2H15v2z" />
     </svg>
   );
 }

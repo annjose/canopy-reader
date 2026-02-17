@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 import type { FeedWithCount } from "@canopy/shared";
 import { useFeeds, useFeedFolders } from "@/hooks/use-feeds";
 import { pollAllFeeds } from "@/lib/api";
@@ -10,12 +11,8 @@ import { FeedRow } from "./feed-row";
 import { AddFeedDialog } from "./add-feed-dialog";
 import { EditFeedDialog } from "./edit-feed-dialog";
 
-type Props = {
-  onSelectFeed: (feed: FeedWithCount) => void;
-  selectedFeedId: string | null;
-};
-
-export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
+export function FeedList() {
+  const router = useRouter();
   const { feeds, isLoading, mutate } = useFeeds();
   const { folders, mutate: mutateFolders } = useFeedFolders();
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -97,8 +94,8 @@ export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
       <FeedRow
         key={feed.id}
         feed={feed}
-        selected={feed.id === selectedFeedId}
-        onSelect={() => onSelectFeed(feed)}
+        selected={false}
+        onSelect={() => router.push(`/library?feed_id=${feed.id}`)}
         onEdit={() => setEditingFeed(feed)}
         onMutate={() => void mutate()}
       />
@@ -108,7 +105,7 @@ export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
   return (
     <div>
       <div className="flex items-center justify-between px-4 py-2 border-b">
-        <h2 className="text-sm font-semibold text-foreground">Feeds</h2>
+        <h2 className="text-sm font-semibold text-foreground">Manage Feeds</h2>
         <div className="flex items-center gap-1">
           <Button
             variant="ghost"

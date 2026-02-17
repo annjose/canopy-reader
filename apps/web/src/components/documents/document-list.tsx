@@ -6,6 +6,7 @@ import { useDocuments } from "@/hooks/use-documents";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useAppShell } from "@/components/layout/app-shell";
 import { deleteDocument, updateDocument } from "@/lib/api";
+import { useFeeds } from "@/hooks/use-feeds";
 import { toast } from "@/hooks/use-toast";
 import { STATUS_LABELS } from "@canopy/shared";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ export function DocumentList() {
     "created_at";
   const type = searchParams.get("type") ?? undefined;
   const tag = searchParams.get("tag") ?? undefined;
+  const feedId = searchParams.get("feed_id") ?? undefined;
   const isTrashed = searchParams.get("is_trashed") === "true";
   const isFavorite = searchParams.get("is_favorite") === "true";
 
@@ -65,6 +67,7 @@ export function DocumentList() {
           sort,
           ...(type ? { type } : {}),
           ...(tag ? { tag } : {}),
+          ...(feedId ? { feed_id: feedId } : {}),
         };
 
   const { documents, nextCursor, isLoading, mutate } = useDocuments(params);
@@ -230,15 +233,22 @@ export function DocumentList() {
     router.push(`/library?${sp.toString()}`);
   }
 
+  const { feeds } = useFeeds();
+  const feedName = feedId
+    ? feeds.find((f) => f.id === feedId)?.title ?? "Feed"
+    : null;
+
   const heading = isTrashed
     ? "Trash"
     : isFavorite
       ? "Favorites"
-      : tag
-        ? `Tag: ${tag}`
-        : type
-          ? `${type.charAt(0).toUpperCase()}${type.slice(1)}s`
-          : null;
+      : feedName
+        ? feedName
+        : tag
+          ? `Tag: ${tag}`
+          : type
+            ? `${type.charAt(0).toUpperCase()}${type.slice(1)}s`
+            : null;
 
   return (
     <div>
