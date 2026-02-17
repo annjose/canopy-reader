@@ -54,7 +54,7 @@
 - PR/Commit:
 
 ### Milestone 6 — Shared types + Client API + SWR hooks
-- Status: Not started
+- Status: Done
 - Work: Add `FeedWithCount` to shared types. Add feed client API functions. Extend `ListDocumentsParams` with `feed_id`/`folder`. Create `use-feeds.ts` SWR hooks.
 - Files: `packages/shared/src/types.ts`, `apps/web/src/lib/api.ts`, `apps/web/src/hooks/use-feeds.ts`
 - Test: `pnpm -r typecheck`

@@ -2,6 +2,8 @@ import type {
   Document,
   DocumentNote,
   DocumentStatus,
+  Feed,
+  FeedWithCount,
   Highlight,
   HighlightColor,
   Tag,
@@ -173,6 +175,10 @@ export type ListDocumentsParams = {
   q?: string;
   /** Tag slug filter */
   tag?: string;
+  /** Feed ID filter */
+  feed_id?: string;
+  /** Feed folder filter */
+  folder?: string;
   sort?: "created_at" | "published_at" | "title";
   cursor?: string;
   limit?: number;
@@ -192,10 +198,79 @@ export function buildDocumentsUrl(params: ListDocumentsParams = {}): string {
   if (params.q) sp.set("q", params.q);
   if (params.sort) sp.set("sort", params.sort);
   if (params.tag) sp.set("tag", params.tag);
+  if (params.feed_id) sp.set("feed_id", params.feed_id);
+  if (params.folder) sp.set("folder", params.folder);
   if (params.cursor) sp.set("cursor", params.cursor);
   if (params.limit) sp.set("limit", String(params.limit));
   if (params.is_trashed) sp.set("is_trashed", "true");
   if (params.is_favorite) sp.set("is_favorite", "true");
   const qs = sp.toString();
   return qs ? `${BASE}?${qs}` : BASE;
+}
+
+// --- Feeds ---
+
+const FEEDS_BASE = "/api/feeds";
+
+export type PollResult = {
+  feedId: string;
+  feedTitle: string;
+  newItems: number;
+  errors: string[];
+};
+
+export function listFeeds(folder?: string) {
+  const sp = new URLSearchParams();
+  if (folder) sp.set("folder", folder);
+  const qs = sp.toString();
+  const url = qs ? `${FEEDS_BASE}?${qs}` : FEEDS_BASE;
+  return fetchJSON<{ feeds: FeedWithCount[] }>(url);
+}
+
+export function subscribeFeed(url: string, folder?: string) {
+  return fetchJSON<{ feed: Feed }>(FEEDS_BASE, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ url, folder: folder || undefined }),
+  });
+}
+
+export function updateFeed(
+  id: string,
+  fields: Partial<Pick<Feed, "title" | "folder" | "is_active">>,
+) {
+  return fetchJSON<{ feed: Feed }>(`${FEEDS_BASE}/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+}
+
+export function deleteFeed(id: string) {
+  return fetchJSON<{ success: boolean }>(`${FEEDS_BASE}/${id}`, {
+    method: "DELETE",
+  });
+}
+
+export function listFeedFolders() {
+  return fetchJSON<{ folders: string[] }>(`${FEEDS_BASE}/folders`);
+}
+
+export function pollAllFeeds() {
+  return fetchJSON<{ results: PollResult[] }>(`${FEEDS_BASE}/poll`, {
+    method: "POST",
+  });
+}
+
+export function pollFeed(feedId: string) {
+  return fetchJSON<{ result: PollResult }>(`${FEEDS_BASE}/${feedId}/poll`, {
+    method: "POST",
+  });
+}
+
+export function markFeedItemsRead(feedId: string) {
+  return fetchJSON<{ success: boolean; updated: number }>(
+    `${FEEDS_BASE}/${feedId}/mark-read`,
+    { method: "POST" },
+  );
 }

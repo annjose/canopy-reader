@@ -116,3 +116,8 @@ export interface Feed {
   is_active: number;
   created_at: string;
 }
+
+/** Feed with computed item count for list views */
+export interface FeedWithCount extends Feed {
+  item_count: number;
+}

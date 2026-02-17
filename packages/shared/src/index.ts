@@ -6,6 +6,7 @@ export type {
   DocumentTag,
   DocumentType,
   Feed,
+  FeedWithCount,
   Highlight,
   HighlightColor,
   NotebookData,
