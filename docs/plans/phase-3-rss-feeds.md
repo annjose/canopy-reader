@@ -26,7 +26,7 @@
 - PR/Commit:
 
 ### Milestone 2 — Feed parser + auto-discovery modules
-- Status: Not started
+- Status: Done
 - Work: Install `fast-xml-parser`, create `feed-parser.ts` (RSS 2.0 + Atom normalization), create `feed-discovery.ts` (HTML `<link rel="alternate">` auto-discovery)
 - Files: `apps/web/package.json`, `apps/web/src/lib/feed-parser.ts`, `apps/web/src/lib/feed-discovery.ts`
 - Test: `pnpm -r typecheck`
