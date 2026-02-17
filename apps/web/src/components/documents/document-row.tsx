@@ -93,6 +93,9 @@ export function DocumentRow({ document: doc, selected, onSelect, onMutate }: Pro
           </p>
         )}
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted-foreground">
+          {doc.feed_title && (
+            <span className="whitespace-nowrap font-medium">{doc.feed_title}</span>
+          )}
           {doc.domain && <span className="whitespace-nowrap">{doc.domain}</span>}
           {doc.reading_time_minutes && (
             <span className="whitespace-nowrap">

@@ -49,6 +49,8 @@ export interface Document {
 
   /** Optional tags included in list-oriented payloads */
   tags?: Tag[];
+  /** Optional feed title included in list-oriented payloads for rss_item documents */
+  feed_title?: string;
 }
 
 /** Tag for organizing documents */

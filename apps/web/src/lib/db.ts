@@ -200,6 +200,33 @@ export async function listDocuments(
     for (const doc of documents) {
       doc.tags = tagsByDocument.get(doc.id) ?? [];
     }
+
+    // Attach feed titles for rss_item documents in a single query.
+    const feedDocIds = documents
+      .filter((d) => d.feed_id)
+      .map((d) => d.feed_id!);
+    const uniqueFeedIds = [...new Set(feedDocIds)];
+
+    if (uniqueFeedIds.length > 0) {
+      const feedPlaceholders = uniqueFeedIds.map(() => "?").join(",");
+      const feedRows = await db
+        .prepare(
+          `SELECT id, title FROM feeds WHERE id IN (${feedPlaceholders})`,
+        )
+        .bind(...uniqueFeedIds)
+        .all<{ id: string; title: string }>();
+
+      const feedTitleMap = new Map<string, string>();
+      for (const row of feedRows.results ?? []) {
+        feedTitleMap.set(row.id, row.title);
+      }
+
+      for (const doc of documents) {
+        if (doc.feed_id) {
+          doc.feed_title = feedTitleMap.get(doc.feed_id);
+        }
+      }
+    }
   }
 
   return { documents, nextCursor };

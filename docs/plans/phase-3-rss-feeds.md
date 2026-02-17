@@ -3,7 +3,7 @@
 **Goal**: Subscribe to RSS/Atom feeds and read feed items within Canopy, using the same document model, status workflow, and reader experience as articles.
 
 - Spec reference: `docs/canopy-spec.md` — Phase 3
-- Overall status: **In progress**
+- Overall status: **Complete**
 
 **Rule**: Implement milestone-by-milestone, test, then commit after each block.
 
@@ -75,7 +75,7 @@
 - PR/Commit:
 
 ### Milestone 9 — Polish: feed context in document rows, OPML import
-- Status: Not started
+- Status: Done
 - Work: Show feed name on `rss_item` documents (LEFT JOIN feeds). OPML import endpoint. Optional `feed_title` on Document. Wrangler.toml cron comment.
 - Files: `apps/web/src/lib/db.ts`, `packages/shared/src/types.ts`, `apps/web/src/components/documents/document-row.tsx`, `apps/web/src/app/api/feeds/import/route.ts`, `apps/web/wrangler.toml`
 - Test: `pnpm build` (full production build)

@@ -16,3 +16,8 @@ database_id = "b0c9028e-0805-45c6-b076-3c8913e7300f"
 [[r2_buckets]]
 binding = "R2"
 bucket_name = "canopy-storage"
+
+# Phase 8: Automatic feed polling (not yet implemented)
+# Uncomment and configure a separate Cron Trigger worker to poll feeds on a schedule.
+# [triggers]
+# crons = ["*/30 * * * *"]  # every 30 minutes
