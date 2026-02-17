@@ -311,7 +311,7 @@ export default function ReadPage() {
       s: toggleFavorite,
       e: archive,
       "#": trash,
-      v: openOriginal,
+      o: openOriginal,
       p: () => setRightPanelOpen(!rightPanelOpen),
       c: () => setTocOpen((o) => !o),
       h: () => readerRef.current?.highlightSelection(),

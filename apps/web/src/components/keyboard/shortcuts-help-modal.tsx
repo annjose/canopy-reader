@@ -32,8 +32,8 @@ export function ShortcutsHelpModal() {
             <div className="mt-3" />
             <Shortcut k="j / k" d="Next / previous item" />
             <Shortcut k="↑ / ↓" d="Next / previous item" />
-            <Shortcut k="Enter / o" d="Open selected item" />
-            <Shortcut k="v" d="Open original URL" />
+            <Shortcut k="Enter / Space" d="Open selected item" />
+            <Shortcut k="o" d="Open original URL" />
             <Shortcut k="i" d="Move to Inbox" />
             <Shortcut k="r" d="Move to Reading" />
             <Shortcut k="l" d="Move to Later" />
@@ -63,7 +63,7 @@ export function ShortcutsHelpModal() {
             <Shortcut k="s" d="Toggle favorite" />
             <Shortcut k="e" d="Archive" />
             <Shortcut k="#" d="Trash" />
-            <Shortcut k="v" d="Open original URL" />
+            <Shortcut k="o" d="Open original URL" />
             <Shortcut k="p" d="Toggle right panel" />
             <Shortcut k="c" d="Toggle table of contents" />
             <Shortcut k="h" d="Highlight selected text" />

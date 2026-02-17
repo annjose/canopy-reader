@@ -204,8 +204,8 @@ export function DocumentList() {
         setSelectedIndex((i) => Math.max(0, i - 1));
       },
       enter: openSelected,
-      o: openSelected,
-      v: openOriginal,
+      space: openSelected,
+      o: openOriginal,
       s: toggleFavorite,
       t: openTagEditor,
       i: () => setStatus("inbox"),
