@@ -40,7 +40,7 @@
 - PR/Commit:
 
 ### Milestone 4 — API routes: Feed CRUD
-- Status: Not started
+- Status: Done
 - Work: `GET/POST /api/feeds`, `GET/PATCH/DELETE /api/feeds/[id]`, `GET /api/feeds/folders`. POST subscribe uses auto-discovery + dedup.
 - Files: `apps/web/src/app/api/feeds/route.ts`, `apps/web/src/app/api/feeds/[id]/route.ts`, `apps/web/src/app/api/feeds/folders/route.ts`
 - Test: `pnpm -r typecheck`, smoke test via devtools

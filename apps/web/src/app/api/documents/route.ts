@@ -89,6 +89,8 @@ export async function GET(request: NextRequest) {
       type: (params.get("type") as DocumentType) || undefined,
       q: params.get("q") || undefined,
       tag: params.get("tag") || undefined,
+      feed_id: params.get("feed_id") || undefined,
+      folder: params.get("folder") || undefined,
       sort:
         (params.get("sort") as "created_at" | "published_at" | "title") ||
         undefined,
