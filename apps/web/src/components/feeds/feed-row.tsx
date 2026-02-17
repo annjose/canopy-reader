@@ -1,16 +1,40 @@
 "use client";
 
+import { useState } from "react";
 import type { FeedWithCount } from "@canopy/shared";
+import { pollFeed } from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
 import { extractDomain } from "@/lib/utils";
 
 type Props = {
   feed: FeedWithCount;
   selected: boolean;
   onSelect: () => void;
+  onEdit: () => void;
+  onMutate: () => void;
 };
 
-export function FeedRow({ feed, selected, onSelect }: Props) {
+export function FeedRow({ feed, selected, onSelect, onEdit, onMutate }: Props) {
   const domain = feed.site_url ? extractDomain(feed.site_url) : extractDomain(feed.url);
+  const [retrying, setRetrying] = useState(false);
+
+  async function handleRetry(e: React.MouseEvent) {
+    e.stopPropagation();
+    setRetrying(true);
+    try {
+      await pollFeed(feed.id);
+      toast({ title: "Retried", description: feed.title });
+      onMutate();
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Retry failed",
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
+    } finally {
+      setRetrying(false);
+    }
+  }
 
   return (
     <div
@@ -45,13 +69,26 @@ export function FeedRow({ feed, selected, onSelect }: Props) {
       )}
 
       {feed.fetch_error && (
-        <span
-          className="flex-shrink-0 text-[11px] text-destructive bg-destructive/10 rounded px-1.5 py-0.5"
+        <button
+          onClick={handleRetry}
+          disabled={retrying}
+          className="flex-shrink-0 text-[11px] text-destructive bg-destructive/10 rounded px-1.5 py-0.5 hover:bg-destructive/20 transition-colors"
           title={feed.fetch_error}
         >
-          Error
-        </span>
+          {retrying ? "Retrying..." : "Error — retry"}
+        </button>
       )}
+
+      <button
+        onClick={(e) => {
+          e.stopPropagation();
+          onEdit();
+        }}
+        className="hidden group-hover:block flex-shrink-0 p-1 rounded hover:bg-accent text-muted-foreground"
+        title="Edit feed"
+      >
+        <EditIcon />
+      </button>
 
       <span className="flex-shrink-0 text-xs text-muted-foreground">
         {feed.last_successful_fetch_at
@@ -68,6 +105,14 @@ function RssSmIcon() {
       <circle cx="3.5" cy="12.5" r="1.5" fill="currentColor" stroke="none" />
       <path d="M2 8.5a6 6 0 016 6" />
       <path d="M2 4.5a10 10 0 0110 10" />
+    </svg>
+  );
+}
+
+function EditIcon() {
+  return (
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M11.5 2.5l2 2L5 13H3v-2z" />
     </svg>
   );
 }

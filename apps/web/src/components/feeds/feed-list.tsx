@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import type { FeedWithCount } from "@canopy/shared";
 import { useFeeds, useFeedFolders } from "@/hooks/use-feeds";
 import { pollAllFeeds } from "@/lib/api";
@@ -8,6 +8,7 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { FeedRow } from "./feed-row";
 import { AddFeedDialog } from "./add-feed-dialog";
+import { EditFeedDialog } from "./edit-feed-dialog";
 
 type Props = {
   onSelectFeed: (feed: FeedWithCount) => void;
@@ -18,7 +19,41 @@ export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
   const { feeds, isLoading, mutate } = useFeeds();
   const { folders, mutate: mutateFolders } = useFeedFolders();
   const [addDialogOpen, setAddDialogOpen] = useState(false);
+  const [editingFeed, setEditingFeed] = useState<FeedWithCount | null>(null);
   const [polling, setPolling] = useState(false);
+  const [collapsedFolders, setCollapsedFolders] = useState<Set<string>>(new Set());
+
+  // Group feeds by folder
+  const grouped = useMemo(() => {
+    const noFolder: FeedWithCount[] = [];
+    const byFolder = new Map<string, FeedWithCount[]>();
+
+    for (const feed of feeds) {
+      if (feed.folder) {
+        const list = byFolder.get(feed.folder) ?? [];
+        list.push(feed);
+        byFolder.set(feed.folder, list);
+      } else {
+        noFolder.push(feed);
+      }
+    }
+
+    // Sort folder names
+    const sortedFolders = [...byFolder.entries()].sort(([a], [b]) =>
+      a.localeCompare(b, undefined, { sensitivity: "base" }),
+    );
+
+    return { noFolder, sortedFolders };
+  }, [feeds]);
+
+  function toggleFolder(folder: string) {
+    setCollapsedFolders((prev) => {
+      const next = new Set(prev);
+      if (next.has(folder)) next.delete(folder);
+      else next.add(folder);
+      return next;
+    });
+  }
 
   async function handleRefreshAll() {
     setPolling(true);
@@ -44,6 +79,30 @@ export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
   function handleSubscribed() {
     void mutate();
     void mutateFolders();
+  }
+
+  function handleUpdated() {
+    void mutate();
+    void mutateFolders();
+  }
+
+  function handleDeleted() {
+    setEditingFeed(null);
+    void mutate();
+    void mutateFolders();
+  }
+
+  function renderFeedRow(feed: FeedWithCount) {
+    return (
+      <FeedRow
+        key={feed.id}
+        feed={feed}
+        selected={feed.id === selectedFeedId}
+        onSelect={() => onSelectFeed(feed)}
+        onEdit={() => setEditingFeed(feed)}
+        onMutate={() => void mutate()}
+      />
+    );
   }
 
   return (
@@ -82,14 +141,28 @@ export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
         </div>
       )}
 
-      {feeds.map((feed) => (
-        <FeedRow
-          key={feed.id}
-          feed={feed}
-          selected={feed.id === selectedFeedId}
-          onSelect={() => onSelectFeed(feed)}
-        />
-      ))}
+      {/* Feeds without a folder */}
+      {grouped.noFolder.map(renderFeedRow)}
+
+      {/* Folder groups */}
+      {grouped.sortedFolders.map(([folder, folderFeeds]) => {
+        const collapsed = collapsedFolders.has(folder);
+        return (
+          <div key={folder}>
+            <button
+              onClick={() => toggleFolder(folder)}
+              className="flex w-full items-center gap-2 px-4 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-foreground bg-muted/50"
+            >
+              <ChevronIcon open={!collapsed} />
+              {folder}
+              <span className="font-normal normal-case tracking-normal">
+                ({folderFeeds.length})
+              </span>
+            </button>
+            {!collapsed && folderFeeds.map(renderFeedRow)}
+          </div>
+        );
+      })}
 
       <AddFeedDialog
         open={addDialogOpen}
@@ -97,6 +170,35 @@ export function FeedList({ onSelectFeed, selectedFeedId }: Props) {
         onSubscribed={handleSubscribed}
         folders={folders}
       />
+
+      {editingFeed && (
+        <EditFeedDialog
+          feed={editingFeed}
+          open={!!editingFeed}
+          onOpenChange={(open) => { if (!open) setEditingFeed(null); }}
+          onUpdated={handleUpdated}
+          onDeleted={handleDeleted}
+          folders={folders}
+        />
+      )}
     </div>
+  );
+}
+
+function ChevronIcon({ open }: { open: boolean }) {
+  return (
+    <svg
+      width="12"
+      height="12"
+      viewBox="0 0 12 12"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      className={`transition-transform ${open ? "rotate-90" : ""}`}
+    >
+      <path d="M4.5 2.5l3.5 3.5-3.5 3.5" />
+    </svg>
   );
 }

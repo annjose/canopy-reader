@@ -7,7 +7,7 @@ import { DOCUMENT_STATUSES, STATUS_LABELS } from "@canopy/shared";
 import { useDocuments } from "@/hooks/use-documents";
 import { useKeyboardShortcuts } from "@/hooks/use-keyboard-shortcuts";
 import { useAppShell } from "@/components/layout/app-shell";
-import { pollFeed } from "@/lib/api";
+import { pollFeed, markFeedItemsRead } from "@/lib/api";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { DocumentRow } from "@/components/documents/document-row";
@@ -21,6 +21,7 @@ export function FeedItems({ feed, onMutateFeeds }: Props) {
   const router = useRouter();
   const [status, setStatus] = useState<DocumentStatus>("inbox");
   const [polling, setPolling] = useState(false);
+  const [markingRead, setMarkingRead] = useState(false);
 
   const { documents, isLoading, mutate } = useDocuments({
     feed_id: feed.id,
@@ -104,20 +105,52 @@ export function FeedItems({ feed, onMutateFeeds }: Props) {
     }
   }
 
+  async function handleMarkAllRead() {
+    setMarkingRead(true);
+    try {
+      const { updated } = await markFeedItemsRead(feed.id);
+      toast({
+        title: "Marked as read",
+        description: `${updated} item${updated !== 1 ? "s" : ""} archived`,
+      });
+      await mutate();
+      onMutateFeeds();
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Failed to mark as read",
+        description: err instanceof Error ? err.message : "Unknown error",
+      });
+    } finally {
+      setMarkingRead(false);
+    }
+  }
+
   return (
     <div>
       <div className="flex items-center justify-between px-4 py-2 border-b">
         <h2 className="text-sm font-semibold text-foreground truncate">
           {feed.title}
         </h2>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handlePoll}
-          disabled={polling}
-        >
-          {polling ? "Refreshing..." : "Refresh"}
-        </Button>
+        <div className="flex items-center gap-1">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleMarkAllRead}
+            disabled={markingRead}
+            title="Archive all inbox items for this feed"
+          >
+            {markingRead ? "Marking..." : "Mark all read"}
+          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handlePoll}
+            disabled={polling}
+          >
+            {polling ? "Refreshing..." : "Refresh"}
+          </Button>
+        </div>
       </div>
 
       {/* Status tabs */}

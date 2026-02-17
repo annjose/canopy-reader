@@ -68,7 +68,7 @@
 - PR/Commit:
 
 ### Milestone 8 — Feed editing, folders, error states, bulk actions
-- Status: Not started
+- Status: Done
 - Work: Edit dialog (rename, folder, active toggle, delete). Folder grouping in feed list. Error badges + retry. Mark-all-read API route + button.
 - Files: `apps/web/src/components/feeds/edit-feed-dialog.tsx`, `apps/web/src/app/api/feeds/[id]/mark-read/route.ts`, `apps/web/src/lib/feeds-db.ts`, `apps/web/src/components/feeds/feed-list.tsx`, `apps/web/src/components/feeds/feed-row.tsx`
 - Test: `pnpm -r typecheck`, `pnpm dev` smoke test
