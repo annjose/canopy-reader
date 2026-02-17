@@ -7,6 +7,7 @@ import { useAppShell } from "./app-shell";
 
 const NAV_ITEMS = [
   { label: "Home", href: "/library", icon: HomeIcon },
+  { label: "Feeds", href: "/feeds", icon: RssIcon },
   { label: "Tags", href: "/tags", icon: TagIcon },
   { label: "Favorites", href: "/library?is_favorite=true", icon: StarIcon },
   { label: "Trash", href: "/library?is_trashed=true", icon: TrashIcon },
@@ -43,6 +44,9 @@ export function Sidebar({
   function isActive(href: string) {
     if (href === "/library") {
       return currentUrl === "/library" || currentUrl === "/library?status=inbox";
+    }
+    if (href === "/feeds") {
+      return pathname === "/feeds";
     }
     return currentUrl === href;
   }
@@ -271,6 +275,16 @@ function MoonIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M12.5 10.2A5.5 5.5 0 016 2.5a5.5 5.5 0 107.7 7.7z" />
+    </svg>
+  );
+}
+
+function RssIcon() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="3.5" cy="12.5" r="1.5" fill="currentColor" stroke="none" />
+      <path d="M2 8.5a6 6 0 016 6" />
+      <path d="M2 4.5a10 10 0 0110 10" />
     </svg>
   );
 }

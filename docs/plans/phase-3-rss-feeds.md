@@ -61,7 +61,7 @@
 - PR/Commit:
 
 ### Milestone 7 — UI: Feeds page + sidebar entry
-- Status: Not started
+- Status: Done
 - Work: Add "Feeds" to sidebar `NAV_ITEMS`. Create `/feeds` page with feed list, add-feed dialog, feed items view. Add `g f` keyboard shortcut.
 - Files: `apps/web/src/components/layout/sidebar.tsx`, `apps/web/src/app/feeds/page.tsx`, `apps/web/src/components/feeds/feed-list.tsx`, `apps/web/src/components/feeds/feed-row.tsx`, `apps/web/src/components/feeds/add-feed-dialog.tsx`, `apps/web/src/components/feeds/feed-items.tsx`
 - Test: `pnpm -r typecheck`, `pnpm dev` smoke test

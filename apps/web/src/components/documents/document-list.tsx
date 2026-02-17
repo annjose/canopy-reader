@@ -219,6 +219,7 @@ export function DocumentList() {
       "g r": () => navigateToStatus("reading"),
       "g l": () => navigateToStatus("later"),
       "g a": () => navigateToStatus("archive"),
+      "g f": () => router.push("/feeds"),
     },
   });
 
