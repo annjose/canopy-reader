@@ -69,6 +69,10 @@ export interface ListDocumentsFilters {
   q?: string;
   /** Filter by tag slug (kebab-case) */
   tag?: string;
+  /** Filter by feed ID */
+  feed_id?: string;
+  /** Filter by feed folder */
+  folder?: string;
   sort?: "created_at" | "published_at" | "title";
   cursor?: string;
   limit?: number;
@@ -123,6 +127,18 @@ export async function listDocuments(
       )`,
     );
     params.push(filters.tag);
+  }
+
+  if (filters.feed_id) {
+    conditions.push("feed_id = ?");
+    params.push(filters.feed_id);
+  }
+
+  if (filters.folder) {
+    conditions.push(
+      `feed_id IN (SELECT id FROM feeds WHERE folder = ?)`,
+    );
+    params.push(filters.folder);
   }
 
   const sort = filters.sort ?? "created_at";

@@ -33,7 +33,7 @@
 - PR/Commit:
 
 ### Milestone 3 — Backend: Feed DB helpers
-- Status: Not started
+- Status: Done
 - Work: Create `feeds-db.ts` with CRUD helpers. Extend `ListDocumentsFilters` with `feed_id` and `folder` filters.
 - Files: `apps/web/src/lib/feeds-db.ts`, `apps/web/src/lib/db.ts`
 - Test: `pnpm -r typecheck`
