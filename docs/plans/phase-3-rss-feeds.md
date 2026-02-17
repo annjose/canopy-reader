@@ -47,7 +47,7 @@
 - PR/Commit:
 
 ### Milestone 5 — Feed polling logic + poll API routes
-- Status: Not started
+- Status: Done
 - Work: Create `feed-poller.ts` (fetch, dedup, Readability with RSS content fallback, upload to R2, insert documents). API routes: `POST /api/feeds/poll`, `POST /api/feeds/[id]/poll`.
 - Files: `apps/web/src/lib/feed-poller.ts`, `apps/web/src/app/api/feeds/poll/route.ts`, `apps/web/src/app/api/feeds/[id]/poll/route.ts`
 - Test: Subscribe, poll, verify documents + content in R2, poll again to verify dedup
