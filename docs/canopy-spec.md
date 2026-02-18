@@ -173,7 +173,6 @@ RSS/Atom feed subscription. One-to-many with Document (feed items).
 ```
 /articles/{document_id}/content.html    -- parsed readable HTML
 /articles/{document_id}/thumbnail.webp  -- thumbnail image
-/books/{document_id}/original.epub      -- uploaded EPUB
 /books/{document_id}/content/           -- extracted EPUB chapters as HTML
 /pdfs/{document_id}/original.pdf        -- uploaded PDF
 /emails/{document_id}/content.html      -- parsed email HTML
@@ -383,17 +382,10 @@ Two tabs:
    - Filter by individual feed or folder
    - Mark as read (bulk)
 
-### Phase 4: File Uploads (EPUB & PDF)
+### Phase 4: File Uploads (PDF)
 **Goal**: Upload and read books and PDFs in-app.
 
-1. **EPUB support**
-   - Upload EPUB files → store in R2
-   - Parse EPUB (extract chapters, metadata, cover image)
-   - In-app EPUB reader with chapter navigation
-   - Highlighting and notes within EPUB content
-   - Reading progress per chapter
-
-2. **PDF support**
+1. **PDF support**
    - Upload PDF files → store in R2
    - In-app PDF viewer (using pdf.js or similar)
    - Basic highlighting support on PDF
@@ -534,11 +526,11 @@ APP_URL  # https://canopy.annjose.com
 |-------|-------------|--------|------|
 | 1 | Foundation & Core Reading (MVP) | **Complete** | [`docs/plans/phase-1-foundation.md`](docs/plans/phase-1-foundation.md) |
 | 2 | Tags, Notes & Highlights | **Complete** | [`docs/plans/phase-2-tags-highlight.md`](docs/plans/phase-2-tags-highlight.md) |
-| 3 | RSS Feeds | Not started | |
-| 4 | File Uploads (EPUB & PDF) | Not started | |
+| 3 | RSS Feeds | **Complete** | [`docs/plans/phase-3-rss-feeds.md`](docs/plans/phase-3-rss-feeds.md) |
+| 4 | File Uploads (PDF) | Not started | |
 | 5 | Newsletter / Email Integration | Not started | |
 | 6 | Browser Extension | Not started | |
 | 7 | Obsidian Integration | Not started | |
 | 8 | Polish & Advanced Features | Not started | |
 
-**Phase 1 note**: the MVP is working end-to-end (save by URL → read → organize) with keyboard shortcuts, command palette search, mobile layout, Cloudflare Access enforcement on API routes, reading progress persistence, reader font size controls, and prev/next navigation.
+## Current Status
